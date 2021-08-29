@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.project.Models.Institute" table="Institute">
+        <id name="id" type="int" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="name" column="name" type="string"/>
+        <property name="contactName" column="contactName" type="string"/>
+        <property name="phoneNumber" column="phoneNumber" type="string"/>
+        <property name="city" column="city" type="string"/>
+        <property name="street" column="street" type="string"/>
+        <property name="number" column="number" type="string"/>
+        <property name="deleted" type="boolean">
+            <column name="deleted" default="false" />
+        </property>
+    </class>
+
+    <class name="com.project.Models.Department" table="Department" lazy="true">
+        <id name="id" type="int" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="name" column="name" type="string"/>
+        <property name="deleted" type="boolean">
+            <column name="deleted" default="false" />
+        </property>
+        <many-to-one name="instituteObject" column="institute_id"
+                     class="com.project.Models.Institute" />
+    </class>
+    <class name="com.project.Models.User" table="Users" >
+        <id name="id" type="int" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="uid" column="uid" type="string"/>
+        <property name="firstName" column="firstName" type="string"/>
+        <property name="lastName" column="lastName" type="string"/>
+        <property name="password" column="password" type="string"/>
+        <property name="email" column="email" unique="true" type="string"/>
+        <property name="phone" column="phone" type="string"/>
+        <property name="token" column="token" type="string"/>
+        <property name="permission" column="permission" type="int"/>
+        <property name="deleted" type="boolean">
+            <column name="deleted" default="false" />
+        </property>
+
+        <many-to-one name="instituteObject" column="institute_id"
+                     class="com.project.Models.Institute" />
+        <many-to-one name="departmentObject" column="department_id"
+                     class="com.project.Models.Department" />
+
+    </class>
+
+
+</hibernate-mapping>
