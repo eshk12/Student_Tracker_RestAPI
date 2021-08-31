@@ -3,8 +3,12 @@ package com.project.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.project.Utils.Definitions;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class User extends BaseEntitie {
+
+    @Autowired
+    private Definitions definitions;
 
     private String uid;
     private String firstName;
@@ -14,6 +18,8 @@ public class User extends BaseEntitie {
     private String phone;
     private String token;
     private int permission;
+
+
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Department departmentObject;
@@ -54,7 +60,7 @@ public class User extends BaseEntitie {
     }
 
     public boolean objectIsEmpty() {
-        if (isEmpty(this.uid) || isEmpty(this.firstName) || isEmpty(this.lastName) || isEmpty(this.password) || isEmpty(this.phone) || (this.permission < Definitions.ADMIN_PERMISSION || this.permission > Definitions.GUEST_PERMISSION ) ) {
+        if (isEmpty(this.uid) || isEmpty(this.firstName) || isEmpty(this.lastName) || isEmpty(this.password) || isEmpty(this.phone) || (this.permission < definitions.ADMIN_PERMISSION || this.permission > definitions.GUEST_PERMISSION ) ) {
             return true;
         }
         return false;

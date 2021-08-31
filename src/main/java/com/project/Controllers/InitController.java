@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Transactional
 public class InitController {
-    @Autowired
-    private Persist persist;
+    @Autowired private Persist persist;
+    @Autowired private PasswordAuthentication passwordAuthentication;
 
     @RequestMapping(value = "/init/firstrun", method = RequestMethod.POST)
     public void firstRun()
@@ -40,7 +40,7 @@ public class InitController {
                 false
                 );
         user.setInstituteObject(institute);
-        user.setPassword(PasswordAuthentication.hashPassword(user.getPassword()));
+        user.setPassword(passwordAuthentication.hashPassword(user.getPassword()));
         persist.save(user);
     }
 

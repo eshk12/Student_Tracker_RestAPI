@@ -15,6 +15,9 @@ public class BaseController {
     @Autowired
     private Persist persist;
 
+    @Autowired
+    private Definitions definitions;
+
     @ModelAttribute
     public AuthUser isUserAuthenticated(HttpServletRequest request){
         AuthUser authUser;
@@ -26,12 +29,13 @@ public class BaseController {
                     .setParameter("token", token)
                     .uniqueResult();
             if(user != null){
-                authUser = new AuthUser(user.getPermission(), user.getDepartmentObject().getInstituteObject().getId());
+                int departmentId = (user.getDepartmentObject() != null ) ? user.getDepartmentObject().getId() : 0;
+                authUser = new AuthUser(user.getPermission(), user.getInstituteObject().getId(), departmentId);
             }else{ //invalid token
-                authUser = new AuthUser(Definitions.INVALID_TOKEN);
+                authUser = new AuthUser(definitions.INVALID_TOKEN);
             }
         }else{
-            authUser = new AuthUser(Definitions.GUEST_PERMISSION);
+            authUser = new AuthUser(definitions.GUEST_PERMISSION);
         }
         return authUser;
     }

@@ -20,8 +20,12 @@ import java.util.List;
 @RestController
 public class UserController extends BaseController {
 
-    @Autowired
-    private Persist persist;
+    @Autowired private Persist persist;
+    @Autowired private Definitions definitions;
+    @Autowired private Permissions permissions;
+    @Autowired private PasswordAuthentication passwordAuthentication;
+
+
 
     EmailValidator validator = EmailValidator.getInstance();
 
@@ -32,10 +36,10 @@ public class UserController extends BaseController {
             @RequestParam(required = false) Integer departmentId,
             AuthUser authUser) {
         BasicResponseModel responseModel;
-        if (Permissions.validPermission(authUser.getAuthUserpermission(), Definitions.ADMIN_INSTITUTE_PERMISSION)) {
+        if (permissions.validPermission(authUser.getAuthUserpermission(), definitions.ADMIN_INSTITUTE_PERMISSION)) {
             instituteId =
                     (instituteId != null) &&
-                            (authUser.getAuthUserpermission() == Definitions.ADMIN_PERMISSION)
+                            (authUser.getAuthUserpermission() == definitions.ADMIN_PERMISSION)
                             ? instituteId
                             : authUser.getAuthUserInstituteId();
             departmentId = departmentId != null ? departmentId : null;
@@ -49,14 +53,14 @@ public class UserController extends BaseController {
                                 .setParameter("instituteId", instituteId)
                                 .list();
                 if (departmentList.isEmpty()) {
-                    return new BasicResponseModel(Definitions.DEPARTMENT_NOT_FOUND, Definitions.DEPARTMENT_NOT_FOUND_MSG);
+                    return new BasicResponseModel(definitions.DEPARTMENT_NOT_FOUND, definitions.DEPARTMENT_NOT_FOUND_MSG);
                 }
             }
             if (user.objectIsEmpty()) {
-                responseModel = new BasicResponseModel(Definitions.MISSING_FIELDS, Definitions.MISSING_FIELDS_MSG);
+                responseModel = new BasicResponseModel(definitions.MISSING_FIELDS, definitions.MISSING_FIELDS_MSG);
             } else {
                 if (!validator.isValid(user.getEmail())) {
-                    responseModel = new BasicResponseModel(Definitions.INVALID_EMAIL, Definitions.INVALID_EMAIL_MSG);
+                    responseModel = new BasicResponseModel(definitions.INVALID_EMAIL, definitions.INVALID_EMAIL_MSG);
                 } else {
                     List<User> userList = persist.getQuerySession().createQuery("FROM User WHERE email = :email")
                             .setParameter("email", user.getEmail())
@@ -65,26 +69,26 @@ public class UserController extends BaseController {
                         //check if valid permission
                         //here we check that the user have ADMIN_INSTITUTE_PERMISSION and tries to make
                         //user with ADMIN_PERMISSION so we cast it to ADMIN_INSTITUTE_PERMISSION
-                        if (authUser.getAuthUserpermission() == Definitions.ADMIN_INSTITUTE_PERMISSION &&
-                                user.getPermission() == Definitions.ADMIN_PERMISSION) {
-                            user.setPermission(Definitions.ADMIN_INSTITUTE_PERMISSION);
+                        if (authUser.getAuthUserpermission() == definitions.ADMIN_INSTITUTE_PERMISSION &&
+                                user.getPermission() == definitions.ADMIN_PERMISSION) {
+                            user.setPermission(definitions.ADMIN_INSTITUTE_PERMISSION);
                         }
                         Department departmentObject = departmentId != null ? persist.loadObject(Department.class, departmentId) : null;
                         Institute instituteObject = persist.loadObject(Institute.class, instituteId);
-                        user.setPassword(PasswordAuthentication.hashPassword(user.getPassword()));
+                        user.setPassword(passwordAuthentication.hashPassword(user.getPassword()));
                         user.setDepartmentObject(departmentObject);
                         user.setInstituteObject(instituteObject); // because we allow user without department
                         persist.save(user);
                         responseModel = new BasicResponseModel(user, authUser);
                     } else {
-                        responseModel = new BasicResponseModel(Definitions.EMAIL_EXISTS, Definitions.EMAIL_EXISTS_MSG);
+                        responseModel = new BasicResponseModel(definitions.EMAIL_EXISTS, definitions.EMAIL_EXISTS_MSG);
                     }
                 }
             }
-        } else if (authUser.getAuthUserpermission() == Definitions.INVALID_TOKEN) {
-            responseModel = new BasicResponseModel(Definitions.INVALID_TOKEN, Definitions.INVALID_TOKEN_MSG);
+        } else if (authUser.getAuthUserpermission() == definitions.INVALID_TOKEN) {
+            responseModel = new BasicResponseModel(definitions.INVALID_TOKEN, definitions.INVALID_TOKEN_MSG);
         } else {
-            responseModel = new BasicResponseModel(Definitions.NO_PERMISSIONS, Definitions.NO_PERMISSIONS_MSG);
+            responseModel = new BasicResponseModel(definitions.NO_PERMISSIONS, definitions.NO_PERMISSIONS_MSG);
         }
         return responseModel;
     }
@@ -98,15 +102,15 @@ public class UserController extends BaseController {
             @RequestParam(required = false) Integer departmentId,
             AuthUser authUser) {
         BasicResponseModel responseModel;
-        if (Permissions.validPermission(authUser.getAuthUserpermission(), Definitions.ADMIN_INSTITUTE_PERMISSION)) {
+        if (permissions.validPermission(authUser.getAuthUserpermission(), definitions.ADMIN_INSTITUTE_PERMISSION)) {
             if (user.getId() <= 0 ||
-                    user.getPermission() < Definitions.ADMIN_PERMISSION ||
-                    user.getPermission() > Definitions.GUEST_PERMISSION) {
-                responseModel = new BasicResponseModel(Definitions.MISSING_FIELDS, Definitions.MISSING_FIELDS_MSG);
+                    user.getPermission() < definitions.ADMIN_PERMISSION ||
+                    user.getPermission() > definitions.GUEST_PERMISSION) {
+                responseModel = new BasicResponseModel(definitions.MISSING_FIELDS, definitions.MISSING_FIELDS_MSG);
             } else {
                 instituteId =
                         (instituteId != null) &&
-                                (authUser.getAuthUserpermission() == Definitions.ADMIN_PERMISSION)
+                                (authUser.getAuthUserpermission() == definitions.ADMIN_PERMISSION)
                                 ? instituteId
                                 : authUser.getAuthUserInstituteId();
                 departmentId = departmentId != null ? departmentId : null;
@@ -121,22 +125,22 @@ public class UserController extends BaseController {
                                     .setParameter("instituteId", instituteId)
                                     .list();
                     if (departmentList.isEmpty()) {
-                        return new BasicResponseModel(Definitions.DEPARTMENT_NOT_FOUND, Definitions.DEPARTMENT_NOT_FOUND_MSG);
+                        return new BasicResponseModel(definitions.DEPARTMENT_NOT_FOUND, definitions.DEPARTMENT_NOT_FOUND_MSG);
                     }
                 }
                 List<User> userRow = persist.getQuerySession().createQuery("FROM User WHERE id = :id")
                         .setParameter("id", user.getId())
                         .list();
                 if (userRow.isEmpty()) {
-                    responseModel = new BasicResponseModel(Definitions.USER_NOT_FOUND, Definitions.USER_NOT_FOUND_MSG);
+                    responseModel = new BasicResponseModel(definitions.USER_NOT_FOUND, definitions.USER_NOT_FOUND_MSG);
                 } else if (userRow.size() > 1) {
-                    responseModel = new BasicResponseModel(Definitions.MULTI_RECORD, Definitions.MULTI_RECORD_MSG);
+                    responseModel = new BasicResponseModel(definitions.MULTI_RECORD, definitions.MULTI_RECORD_MSG);
                 } else { //so far so good.
 
                     User oldUser = persist.loadObject(User.class, user.getId());
-                    if (authUser.getAuthUserpermission() == Definitions.ADMIN_INSTITUTE_PERMISSION &&
-                            user.getPermission() > Definitions.ADMIN_PERMISSION) {
-                        user.setPermission(Definitions.ADMIN_INSTITUTE_PERMISSION);
+                    if (authUser.getAuthUserpermission() == definitions.ADMIN_INSTITUTE_PERMISSION &&
+                            user.getPermission() > definitions.ADMIN_PERMISSION) {
+                        user.setPermission(definitions.ADMIN_INSTITUTE_PERMISSION);
                     }
 
                     Department departmentObject = departmentId != null ? persist.loadObject(Department.class, departmentId) : null;
@@ -146,13 +150,13 @@ public class UserController extends BaseController {
 
                     if (user.getEmail() != null && !user.getEmail().equals(userRow.get(0).getEmail())) {
                         if (!validator.isValid(user.getEmail())) {
-                            responseModel = new BasicResponseModel(Definitions.INVALID_EMAIL, Definitions.INVALID_EMAIL_MSG);
+                            responseModel = new BasicResponseModel(definitions.INVALID_EMAIL, definitions.INVALID_EMAIL_MSG);
                         } else {
                             List<User> userList = persist.getQuerySession().createQuery("FROM User WHERE email = :email")
                                     .setParameter("email", user.getEmail())
                                     .list();
                             if (userList.size() > 0) {
-                                responseModel = new BasicResponseModel(Definitions.EMAIL_EXISTS, Definitions.EMAIL_EXISTS_MSG);
+                                responseModel = new BasicResponseModel(definitions.EMAIL_EXISTS, definitions.EMAIL_EXISTS_MSG);
                             } else {
                                 oldUser.setObject(user);
                                 persist.save(oldUser);
@@ -166,10 +170,10 @@ public class UserController extends BaseController {
                     }
                 }
             }
-        } else if (authUser.getAuthUserpermission() == Definitions.INVALID_TOKEN) {
-            responseModel = new BasicResponseModel(Definitions.INVALID_TOKEN, Definitions.INVALID_TOKEN_MSG);
+        } else if (authUser.getAuthUserpermission() == definitions.INVALID_TOKEN) {
+            responseModel = new BasicResponseModel(definitions.INVALID_TOKEN, definitions.INVALID_TOKEN_MSG);
         } else {
-            responseModel = new BasicResponseModel(Definitions.NO_PERMISSIONS, Definitions.NO_PERMISSIONS_MSG);
+            responseModel = new BasicResponseModel(definitions.NO_PERMISSIONS, definitions.NO_PERMISSIONS_MSG);
         }
         return responseModel;
     }
@@ -179,34 +183,34 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/users/updateUserPassword", method = RequestMethod.POST)
     public BasicResponseModel updateUserPassword(@RequestParam int id, @RequestParam String password, AuthUser authUser) {
         BasicResponseModel responseModel;
-        if (Permissions.validPermission(authUser.getAuthUserpermission(), Definitions.ADMIN_INSTITUTE_PERMISSION)) {
+        if (permissions.validPermission(authUser.getAuthUserpermission(), definitions.ADMIN_INSTITUTE_PERMISSION)) {
             if (id < 0 || password.length() == 0) {
-                responseModel = new BasicResponseModel(Definitions.MISSING_FIELDS, Definitions.MISSING_FIELDS_MSG);
+                responseModel = new BasicResponseModel(definitions.MISSING_FIELDS, definitions.MISSING_FIELDS_MSG);
             } else {
-                String Query = authUser.getAuthUserpermission() == Definitions.ADMIN_PERMISSION
+                String query = authUser.getAuthUserpermission() == definitions.ADMIN_PERMISSION
                         ? "FROM User WHERE id = :id AND :instituteId = :instituteId"
                         : "FROM User WHERE id = :id AND instituteObject.id = :instituteId"
                 ;
                 List<User> userRow = persist.getQuerySession()
-                        .createQuery(Query)
+                        .createQuery(query)
                         .setParameter("id", id)
                         .setParameter("instituteId", authUser.getAuthUserInstituteId())
                         .list();
 
                 if (userRow.isEmpty()) {
-                    responseModel = new BasicResponseModel(Definitions.USER_NOT_FOUND, Definitions.USER_NOT_FOUND_MSG);
+                    responseModel = new BasicResponseModel(definitions.USER_NOT_FOUND, definitions.USER_NOT_FOUND_MSG);
                 } else if (userRow.size() > 1) {
-                    responseModel = new BasicResponseModel(Definitions.MULTI_RECORD, Definitions.MULTI_RECORD_MSG);
+                    responseModel = new BasicResponseModel(definitions.MULTI_RECORD, definitions.MULTI_RECORD_MSG);
                 } else {
                     User oldUser = persist.loadObject(User.class, id);
-                    oldUser.setPassword(PasswordAuthentication.hashPassword(password));
+                    oldUser.setPassword(passwordAuthentication.hashPassword(password));
                     responseModel = new BasicResponseModel(oldUser);
                 }
             }
-        } else if (authUser.getAuthUserpermission() == Definitions.INVALID_TOKEN) {
-            responseModel = new BasicResponseModel(Definitions.INVALID_TOKEN, Definitions.INVALID_TOKEN_MSG);
+        } else if (authUser.getAuthUserpermission() == definitions.INVALID_TOKEN) {
+            responseModel = new BasicResponseModel(definitions.INVALID_TOKEN, definitions.INVALID_TOKEN_MSG);
         } else {
-            responseModel = new BasicResponseModel(Definitions.NO_PERMISSIONS, Definitions.NO_PERMISSIONS_MSG);
+            responseModel = new BasicResponseModel(definitions.NO_PERMISSIONS, definitions.NO_PERMISSIONS_MSG);
         }
         return responseModel;
     }
@@ -214,25 +218,25 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/users/getUser", method = RequestMethod.GET)
     public BasicResponseModel getUser(@RequestParam int id, AuthUser authUser) {
         BasicResponseModel responseModel;
-        if (Permissions.validPermission(authUser.getAuthUserpermission(), Definitions.ADMIN_INSTITUTE_PERMISSION)) {
+        if (permissions.validPermission(authUser.getAuthUserpermission(), definitions.ADMIN_INSTITUTE_PERMISSION)) {
             if (id < 0) {
-                responseModel = new BasicResponseModel(Definitions.MISSING_FIELDS, Definitions.MISSING_FIELDS_MSG);
+                responseModel = new BasicResponseModel(definitions.MISSING_FIELDS, definitions.MISSING_FIELDS_MSG);
             } else {
                 List<User> userRow = persist.getQuerySession().createQuery("FROM User WHERE id = :id")
                         .setParameter("id", id)
                         .list();
                 if (userRow.isEmpty()) {
-                    responseModel = new BasicResponseModel(Definitions.USER_NOT_FOUND, Definitions.USER_NOT_FOUND_MSG);
+                    responseModel = new BasicResponseModel(definitions.USER_NOT_FOUND, definitions.USER_NOT_FOUND_MSG);
                 } else if (userRow.size() > 1) {
-                    responseModel = new BasicResponseModel(Definitions.MULTI_RECORD, Definitions.MULTI_RECORD_MSG);
+                    responseModel = new BasicResponseModel(definitions.MULTI_RECORD, definitions.MULTI_RECORD_MSG);
                 } else {
                     responseModel = new BasicResponseModel(persist.loadObject(User.class, id), authUser);
                 }
             }
-        } else if (authUser.getAuthUserpermission() == Definitions.INVALID_TOKEN) {
-            responseModel = new BasicResponseModel(Definitions.INVALID_TOKEN, Definitions.INVALID_TOKEN_MSG);
+        } else if (authUser.getAuthUserpermission() == definitions.INVALID_TOKEN) {
+            responseModel = new BasicResponseModel(definitions.INVALID_TOKEN, definitions.INVALID_TOKEN_MSG);
         } else {
-            responseModel = new BasicResponseModel(Definitions.NO_PERMISSIONS, Definitions.NO_PERMISSIONS_MSG);
+            responseModel = new BasicResponseModel(definitions.NO_PERMISSIONS, definitions.NO_PERMISSIONS_MSG);
         }
         return responseModel;
     }
@@ -240,17 +244,17 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/users/deleteUser", method = RequestMethod.POST)
     public BasicResponseModel deleteUser(@RequestParam int id, @RequestParam boolean delete, AuthUser authUser) {
         BasicResponseModel responseModel;
-        if (Permissions.validPermission(authUser.getAuthUserpermission(), Definitions.ADMIN_INSTITUTE_PERMISSION)) {
+        if (permissions.validPermission(authUser.getAuthUserpermission(), definitions.ADMIN_INSTITUTE_PERMISSION)) {
             if (id < 0) {
-                responseModel = new BasicResponseModel(Definitions.MISSING_FIELDS, Definitions.MISSING_FIELDS_MSG);
+                responseModel = new BasicResponseModel(definitions.MISSING_FIELDS, definitions.MISSING_FIELDS_MSG);
             } else {
                 List<User> userRow = persist.getQuerySession().createQuery("FROM User WHERE id = :id")
                         .setParameter("id", id)
                         .list();
                 if (userRow.isEmpty()) {
-                    responseModel = new BasicResponseModel(Definitions.USER_NOT_FOUND, Definitions.USER_NOT_FOUND_MSG);
+                    responseModel = new BasicResponseModel(definitions.USER_NOT_FOUND, definitions.USER_NOT_FOUND_MSG);
                 } else if (userRow.size() > 1) {
-                    responseModel = new BasicResponseModel(Definitions.MULTI_RECORD, Definitions.MULTI_RECORD_MSG);
+                    responseModel = new BasicResponseModel(definitions.MULTI_RECORD, definitions.MULTI_RECORD_MSG);
                 } else {
                     User user = persist.loadObject(User.class, id);
                     user.setDeleted(delete);
@@ -258,10 +262,10 @@ public class UserController extends BaseController {
                     responseModel = new BasicResponseModel(user);
                 }
             }
-        } else if (authUser.getAuthUserpermission() == Definitions.INVALID_TOKEN) {
-            responseModel = new BasicResponseModel(Definitions.INVALID_TOKEN, Definitions.INVALID_TOKEN_MSG);
+        } else if (authUser.getAuthUserpermission() == definitions.INVALID_TOKEN) {
+            responseModel = new BasicResponseModel(definitions.INVALID_TOKEN, definitions.INVALID_TOKEN_MSG);
         } else {
-            responseModel = new BasicResponseModel(Definitions.NO_PERMISSIONS, Definitions.NO_PERMISSIONS_MSG);
+            responseModel = new BasicResponseModel(definitions.NO_PERMISSIONS, definitions.NO_PERMISSIONS_MSG);
         }
         return responseModel;
     }
@@ -269,17 +273,17 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/users/getAllUsers", method = RequestMethod.GET)
     public BasicResponseModel getAllUsers(AuthUser authUser) {
         BasicResponseModel responseModel;
-        if (Permissions.validPermission(authUser.getAuthUserpermission(), Definitions.ADMIN_INSTITUTE_PERMISSION)) {
+        if (permissions.validPermission(authUser.getAuthUserpermission(), definitions.ADMIN_INSTITUTE_PERMISSION)) {
             List<User> allUsers = persist.getQuerySession().createQuery("FROM User").list();
             if (allUsers.isEmpty()) {
-                responseModel = new BasicResponseModel(Definitions.EMPTY_LIST, Definitions.EMPTY_LIST_MSG);
+                responseModel = new BasicResponseModel(definitions.EMPTY_LIST, definitions.EMPTY_LIST_MSG);
             } else {
                 responseModel = new BasicResponseModel(allUsers);
             }
-        } else if (authUser.getAuthUserpermission() == Definitions.INVALID_TOKEN) {
-            responseModel = new BasicResponseModel(Definitions.INVALID_TOKEN, Definitions.INVALID_TOKEN_MSG);
+        } else if (authUser.getAuthUserpermission() == definitions.INVALID_TOKEN) {
+            responseModel = new BasicResponseModel(definitions.INVALID_TOKEN, definitions.INVALID_TOKEN_MSG);
         } else {
-            responseModel = new BasicResponseModel(Definitions.NO_PERMISSIONS, Definitions.NO_PERMISSIONS_MSG);
+            responseModel = new BasicResponseModel(definitions.NO_PERMISSIONS, definitions.NO_PERMISSIONS_MSG);
         }
         return responseModel;
     }

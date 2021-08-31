@@ -6,6 +6,8 @@ public class BasicResponseModel {
     private String customMessage;
     private Object object;
     private AuthUser authUser;
+
+
     public BasicResponseModel(int errorCode, String errorName) {
         this.errorCode = errorCode;
         this.errorName = errorName;

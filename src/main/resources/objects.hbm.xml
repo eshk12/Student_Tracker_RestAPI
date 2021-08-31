@@ -28,6 +28,8 @@
         <many-to-one name="instituteObject" column="institute_id"
                      class="com.project.Models.Institute" />
     </class>
+
+
     <class name="com.project.Models.User" table="Users" >
         <id name="id" type="int" column="id">
             <generator class="native"/>
@@ -51,5 +53,16 @@
 
     </class>
 
+    <class name="com.project.Models.Event" table="Event" lazy="true">
+        <id name="id" type="int" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="name" column="name" type="string"/>
+        <property name="deleted" type="boolean">
+            <column name="deleted" default="false" />
+        </property>
+        <many-to-one name="departmentObject" column="department_id"
+                     class="com.project.Models.Department" />
+    </class>
 
 </hibernate-mapping>

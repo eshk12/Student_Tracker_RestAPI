@@ -1,8 +1,12 @@
 package com.project.Utils;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class Permissions {
-    public static boolean validPermission(int userPermission, int requiredPermission) {
-        System.out.println(requiredPermission);
+    public boolean validPermission(int userPermission, int requiredPermission) {
         return userPermission <= requiredPermission;
     }
+
+
 }
