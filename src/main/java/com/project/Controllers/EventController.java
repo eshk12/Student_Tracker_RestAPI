@@ -71,11 +71,32 @@ public class EventController extends BaseController{
     }
     //GET1 v
 
-    //GETALL v
+    @RequestMapping(value = "/event/getEvent", method = RequestMethod.GET)
+    public BasicResponseModel getDepartment(@RequestParam int id, AuthUser authUser) {
+        BasicResponseModel responseModel;
+        if (permissions.validPermission(authUser.getAuthUserpermission(), definitions.ADMIN_DEPARTMENT_PERMISSION)) {
+            if (id < 0) {
+                responseModel = new BasicResponseModel(definitions.MISSING_FIELDS, definitions.MISSING_FIELDS_MSG);
+            } else {
+                List<Event> eventList = persist.getQuerySession().createQuery("FROM Event WHERE id = :id")
+                        .setParameter("id", id)
+                        .list();
+                if (eventList.isEmpty()) {
+                    responseModel = new BasicResponseModel(definitions.EVENT_NOT_FOUND, definitions.EVENT_NOT_FOUND_MSG);
+                } else if (eventList.size() > 1) {
+                    responseModel = new BasicResponseModel(definitions.MULTI_RECORD, definitions.MULTI_RECORD_MSG);
+                } else {
+                    responseModel = new BasicResponseModel(persist.loadObject(Event.class, id), authUser);
+                }
+            }
+        } else if (authUser.getAuthUserpermission() == definitions.INVALID_TOKEN) {
+            responseModel = new BasicResponseModel(definitions.INVALID_TOKEN, definitions.INVALID_TOKEN_MSG);
+        } else {
+            responseModel = new BasicResponseModel(definitions.NO_PERMISSIONS, definitions.NO_PERMISSIONS_MSG);
+        }
+        return responseModel;
+    }
 
-    //UPDATE
-
-    //DELETE
 
     @RequestMapping(value = "/event/deleteEvent", method = RequestMethod.POST)
     public BasicResponseModel deleteEvent(@RequestParam int id, @RequestParam boolean delete, AuthUser authUser) {
@@ -92,11 +113,29 @@ public class EventController extends BaseController{
                 } else if (eventList.size() > 1) {
                     responseModel = new BasicResponseModel(definitions.MULTI_RECORD, definitions.MULTI_RECORD_MSG);
                 } else {
-                    Department department = persist.loadObject(Department.class, id);
-                    department.setDeleted(delete);
-                    persist.save(department);
-                    responseModel = new BasicResponseModel(department, authUser);
+                    Event event = persist.loadObject(Event.class, id);
+                    event.setDeleted(delete);
+                    persist.save(event);
+                    responseModel = new BasicResponseModel(event, authUser);
                 }
+            }
+        } else if (authUser.getAuthUserpermission() == definitions.INVALID_TOKEN) {
+            responseModel = new BasicResponseModel(definitions.INVALID_TOKEN, definitions.INVALID_TOKEN_MSG);
+        } else {
+            responseModel = new BasicResponseModel(definitions.NO_PERMISSIONS, definitions.NO_PERMISSIONS_MSG);
+        }
+        return responseModel;
+    }
+
+    @RequestMapping(value = "/event/getAllEvents", method = RequestMethod.GET)
+    public BasicResponseModel getAllEvents(AuthUser authUser) {
+        BasicResponseModel responseModel;
+        if (permissions.validPermission(authUser.getAuthUserpermission(), definitions.ADMIN_DEPARTMENT_PERMISSION)) {
+            List<Event> eventList = persist.getQuerySession().createQuery("FROM Event AS event ORDER BY event.id DESC").list();
+            if (eventList.isEmpty()) {
+                responseModel = new BasicResponseModel(definitions.EMPTY_LIST, definitions.EMPTY_LIST_MSG);
+            } else {
+                responseModel = new BasicResponseModel(eventList, authUser);
             }
         } else if (authUser.getAuthUserpermission() == definitions.INVALID_TOKEN) {
             responseModel = new BasicResponseModel(definitions.INVALID_TOKEN, definitions.INVALID_TOKEN_MSG);

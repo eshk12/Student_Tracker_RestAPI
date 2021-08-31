@@ -30,7 +30,7 @@ public class AppConfig {
         Map<String, String> dbProps = getDbProps();
         ComboPooledDataSource dataSource = new ComboPooledDataSource();
         dataSource.setDriverClass("com.mysql.jdbc.Driver");
-        dataSource.setJdbcUrl(String.format("jdbc:mysql://%s/tracker?useSSL=false&amp;useUnicode=true&amp;characterEncoding=utf8", dbProps.get("server")));
+        dataSource.setJdbcUrl(String.format("jdbc:mysql://%s/%s?useSSL=false&useUnicode=true&characterEncoding=utf8&connectionCollation=utf8_general_ci&characterSetResults=utf8", dbProps.get("server"), dbProps.get("database")));
         dataSource.setUser(dbProps.get("user"));
         dataSource.setPassword(dbProps.get("password"));
         dataSource.setMaxPoolSize(20);
@@ -83,6 +83,7 @@ public class AppConfig {
         propsMap.put("user", "root");
         propsMap.put("password", "");
         propsMap.put("server", "localhost");
+        propsMap.put("database", "tracker");
         return propsMap;
     }
 }

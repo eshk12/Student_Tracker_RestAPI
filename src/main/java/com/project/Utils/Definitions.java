@@ -23,7 +23,7 @@ public class Definitions {
     public final String DEPARTMENT_NOT_FOUND_MSG = "החוג לא קיים במערכת.";
 
     public final int EVENT_NOT_FOUND = 501;
-    public final String EVENT_NOT_FOUND_MSG = "החוג לא קיים במערכת.";
+    public final String EVENT_NOT_FOUND_MSG = "האירוע לא קיים במערכת.";
 
     public final int DEPARTMENTS_NOT_FOUND = 501;
     public final String DEPARTMENTS_NOT_FOUND_MSG = "לא קיימים חוגים במערכת.";
