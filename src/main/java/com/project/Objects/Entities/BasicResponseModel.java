@@ -20,6 +20,11 @@ public class BasicResponseModel {
         this.authUser = authUser;
     }
 
+    public BasicResponseModel(String customMessage, Object object) {
+        this.customMessage = customMessage;
+        this.object = object;
+    }
+
     public BasicResponseModel(String customMessage) {
         this.customMessage = customMessage;
     }
@@ -62,5 +67,16 @@ public class BasicResponseModel {
 
     public void setAuthUser(AuthUser authUser) {
         this.authUser = authUser;
+    }
+
+    @Override
+    public String toString() {
+        return "BasicResponseModel{" +
+                "errorCode=" + errorCode +
+                ", errorName='" + errorName + '\'' +
+                ", customMessage='" + customMessage + '\'' +
+                ", object=" + object +
+                ", authUser=" + authUser +
+                '}';
     }
 }

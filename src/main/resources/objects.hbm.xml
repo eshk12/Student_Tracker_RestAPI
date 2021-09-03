@@ -65,4 +65,22 @@
                      class="com.project.Models.Department" />
     </class>
 
+    <class name="com.project.Models.Candidate" table="Candidate" lazy="true">
+        <id name="id" type="int" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="uid" column="uid" type="string"/>
+        <property name="eventDate" column="eventDate" type="string"/>
+        <property name="scheduleDate" column="scheduleDate" type="string"/>
+        <property name="candidateName" column="candidateName" type="string"/>
+        <property name="comment" column="comment" type="string"/>
+        <property name="registerationState" column="registerationState" type="int"/>
+        <property name="candidateStatus" column="candidateStatus" type="int"/>
+        <property name="deleted" type="boolean">
+            <column name="deleted" default="false" />
+        </property>
+        <many-to-one name="eventObject" column="event_id"
+                     class="com.project.Models.Event" />
+    </class>
+
 </hibernate-mapping>

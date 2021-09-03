@@ -21,9 +21,9 @@ public class InitController {
     @RequestMapping(value = "/init/firstrun", method = RequestMethod.POST)
     public void firstRun()
     {
-        Institute institute = new Institute("Admin Institute2","Itzik Barabie","052-3937296","Brechia","Shir Hashirim","23");
+        Institute institute = new Institute("מכללת אשקלון","Itzik Barabie","052-3937296","Brechia","Shir Hashirim","23");
         persist.save(institute);
-        Department department = new Department("Admin Department2",institute);
+        Department department = new Department("מדעי המחשב",institute);
         persist.save(department);
 
         User user = new User(

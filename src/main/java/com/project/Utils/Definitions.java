@@ -52,11 +52,23 @@ public class Definitions {
     public final int INVALID_TOKEN = 999;
     public final String INVALID_TOKEN_MSG = "אירעה שגיאה, אנא התחבר מחדש.";
 
+    public final int UPLOAD_FAILED = 505;
+    public final String UPLOAD_FAILED_MSG = "העלאה נכשלה.";
 
+    //PERMISSIONS
     public final int ADMIN_PERMISSION = 1;
     public final int ADMIN_INSTITUTE_PERMISSION = 2;
     public final int ADMIN_DEPARTMENT_PERMISSION = 3;
     public final int GUEST_PERMISSION = 4;
+
+    //CANDIDATE STATE
+    public final int CANDIDATE_ALREADY_SET_SCHEDULE = 1;
+    public final int CANDIDATE_WILL_SET_SCHEDULE_LATER = 2;
+    public final int CANDIDATE_IS_UNDECIDED = 3;
+    public final int CANDIDATE_ASK_ANOTHER_COURSE = 4;
+    public final int CANDIDATE_ALREADY_SET_IN_ANOTHER_COURSE = 5;
+    public final int CANDIDATE_CANCEL_REGISTRATION = 6;
+    public final int CANDIDATE_NO_PHONE_CONTACT = 7;
 
 
 

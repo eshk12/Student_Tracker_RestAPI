@@ -16,9 +16,7 @@ import java.util.List;
 @Transactional
 public class InstituteController extends BaseController {
     @Autowired private Persist persist;
-
     @Autowired private Definitions definitions;
-
     @Autowired private Permissions permissions;
 
     @RequestMapping(value = "/institute/add", method = RequestMethod.POST)

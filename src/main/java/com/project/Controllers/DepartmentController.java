@@ -16,14 +16,10 @@ import java.util.List;
 @RestController
 @Transactional
 public class DepartmentController extends BaseController {
-    @Autowired
-    private Persist persist;
 
-    @Autowired
-    private Definitions definitions;
-
-    @Autowired
-    private Permissions permissions;
+    @Autowired private Persist persist;
+    @Autowired private Definitions definitions;
+    @Autowired private Permissions permissions;
 
     @RequestMapping(value = "/department/add", method = RequestMethod.POST)
     public BasicResponseModel addDepartment(
