@@ -52,8 +52,17 @@ public class Definitions {
     public final int INVALID_TOKEN = 999;
     public final String INVALID_TOKEN_MSG = "אירעה שגיאה, אנא התחבר מחדש.";
 
+    public final String EXCEL_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+    public final String EXCEL_EXTENSION = "xlsx";
+
     public final int UPLOAD_FAILED = 505;
     public final String UPLOAD_FAILED_MSG = "העלאה נכשלה.";
+
+    public final int UPLOAD_FAILED_INVALID_FORMAT = 505;
+    public final String UPLOAD_FAILED_INVALID_FORMAT_MSG = "סוג קובץ לא תקין.";
+
+    public final int UPLOAD_FAILED_INVALID_XLSX_FILE = 505;
+    public final String UPLOAD_FAILED_INVALID_XLSX_FILE_MSG = "קובץ אקסל לא תקין.";
 
     //PERMISSIONS
     public final int ADMIN_PERMISSION = 1;

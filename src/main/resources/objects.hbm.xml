@@ -74,8 +74,8 @@
         <property name="scheduleDate" column="scheduleDate" type="string"/>
         <property name="candidateName" column="candidateName" type="string"/>
         <property name="comment" column="comment" type="string"/>
-        <property name="registerationState" column="registerationState" type="int"/>
-        <property name="candidateStatus" column="candidateStatus" type="int"/>
+        <property name="registerationState" column="registerationState" type="string"/>
+        <property name="candidateStatus" column="candidateStatus" type="string"/>
         <property name="deleted" type="boolean">
             <column name="deleted" default="false" />
         </property>

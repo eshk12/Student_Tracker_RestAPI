@@ -3,17 +3,19 @@ package com.project.Models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 public class Candidate extends BaseEntitie{
-    private String uid;
+    private String uid; //V
     private String eventDate;
     private String scheduleDate;
-    private String candidateName;
-    private String comment;
-    private int registerationState;
-    private int candidateStatus;
+    private String candidateName; //V
+    private String comment; //V
+    private String registerationState;
+    private String candidateStatus;
+
+
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Event eventObject;
 
-    public Candidate(int id, String uid, String eventDate, String scheduleDate, String candidateName, String comment, int registerationState, int candidateStatus, Event eventObject, boolean deleted) {
+    public Candidate(int id, String uid, String eventDate, String scheduleDate, String candidateName, String comment, String registerationState, String candidateStatus, Event eventObject, boolean deleted) {
         super(id, deleted);
         this.uid = uid;
         this.eventDate = eventDate;
@@ -25,7 +27,7 @@ public class Candidate extends BaseEntitie{
         this.eventObject = eventObject;
     }
 
-    public Candidate(String uid, String eventDate, String scheduleDate, String candidateName, String comment, int registerationState, int candidateStatus, Event eventObject, boolean deleted) {
+    public Candidate(String uid, String eventDate, String scheduleDate, String candidateName, String comment, String registerationState, String candidateStatus, Event eventObject, boolean deleted) {
         super(deleted);
         this.uid = uid;
         this.eventDate = eventDate;
@@ -37,7 +39,7 @@ public class Candidate extends BaseEntitie{
         this.eventObject = eventObject;
     }
 
-    public Candidate(String uid, String eventDate, String scheduleDate, String candidateName, String comment, int registerationState, int candidateStatus, Event eventObject) {
+    public Candidate(String uid, String eventDate, String scheduleDate, String candidateName, String comment, String registerationState, String candidateStatus, Event eventObject) {
         this.uid = uid;
         this.eventDate = eventDate;
         this.scheduleDate = scheduleDate;
@@ -90,19 +92,19 @@ public class Candidate extends BaseEntitie{
         this.comment = comment;
     }
 
-    public int getRegisterationState() {
+    public String getRegisterationState() {
         return registerationState;
     }
 
-    public void setRegisterationState(int registerationState) {
+    public void setRegisterationState(String registerationState) {
         this.registerationState = registerationState;
     }
 
-    public int getCandidateStatus() {
+    public String getCandidateStatus() {
         return candidateStatus;
     }
 
-    public void setCandidateStatus(int candidateStatus) {
+    public void setCandidateStatus(String candidateStatus) {
         this.candidateStatus = candidateStatus;
     }
 
