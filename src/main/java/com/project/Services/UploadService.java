@@ -74,6 +74,8 @@ public class UploadService {
                     add("uid");
                     add("candidateName");
                     add("candidateStatus");
+                    add("registerationState");
+                    add("scheduleDate");
                     add("comment");
                 }};
                 ArrayList<String> columnNames = new ArrayList<String>();
@@ -86,7 +88,7 @@ public class UploadService {
                         for (int j = 0; j < columnNames.size(); j++) {
                             if (currentRow.getCell(j) != null) {
                                 currentRow.getCell(j).setCellType(Cell.CELL_TYPE_STRING); // cast all fields insto String.
-                                jsonObject.addProperty(columnNames.get(j), currentRow.getCell(j).getStringCellValue());
+                                jsonObject.addProperty(columnNames.get(j), currentRow.getCell(j).getStringCellValue().replace(",","&comma;"));
                             }
                         }
                         jsonArray.add(jsonObject);

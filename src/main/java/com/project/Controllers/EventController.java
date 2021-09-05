@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import org.hibernate.query.Query;
 import java.util.List;
 
 @RestController
@@ -73,18 +74,26 @@ public class EventController extends BaseController {
             if (event.getId() > 0) {
                 event.setDepartmentObject(null); // unable to change department to Event object.
                 String query;
+                Query queryObject = null;
                 if(permissions.validPermission(authUser.getAuthUserpermission(), definitions.ADMIN_PERMISSION)){
-                    query = "FROM Event WHERE id = :id AND :departmentId = :departmentId AND :instituteId = :instituteId" ;
+                    queryObject =  persist
+                                    .getQuerySession()
+                                    .createQuery("FROM Event WHERE id = :id")
+                                    .setParameter("id", event.getId());
                 } else if (permissions.validPermission(authUser.getAuthUserpermission(), definitions.ADMIN_INSTITUTE_PERMISSION)) {
-                    query = "FROM Event WHERE id = :id AND departmentObject.instituteObject.id = :instituteId AND :departmentId = :departmentId";
+                    queryObject =  persist
+                            .getQuerySession()
+                            .createQuery("FROM Event WHERE id = :id AND departmentObject.instituteObject.id = :instituteId")
+                            .setParameter("instituteId", authUser.getAuthUserInstituteId())
+                            .setParameter("id", event.getId());
                 }else{// MINIMUM PERMISSION ~ ADMIN_DEPARTMENT_PERMISSION
-                    query = "FROM Event WHERE id = :id AND departmentObject.id = :departmentId AND :instituteId = :instituteId";
+                    queryObject =  persist
+                            .getQuerySession()
+                            .createQuery("FROM Event WHERE id = :id AND departmentObject.id = :departmentId")
+                            .setParameter("departmentId", authUser.getAuthUserDepartmentId())
+                            .setParameter("id", event.getId());
                 }
-                List<Event> eventList = persist.getQuerySession().createQuery(query)
-                        .setParameter("id", event.getId())
-                        .setParameter("instituteId", authUser.getAuthUserInstituteId())
-                        .setParameter("departmentId", authUser.getAuthUserDepartmentId())
-                        .list();
+                List<Event> eventList = queryObject.list();
                 if (eventList.isEmpty()) {
                     responseModel = new BasicResponseModel(definitions.EVENT_NOT_FOUND, definitions.EVENT_NOT_FOUND_MSG);
                 } else if (eventList.size() > 1) {

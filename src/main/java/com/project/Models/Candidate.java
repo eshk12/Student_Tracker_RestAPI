@@ -5,11 +5,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class Candidate extends BaseEntitie{
     private String uid; //V
     private String eventDate;
-    private String scheduleDate;
+    private String scheduleDate; //v
     private String candidateName; //V
     private String comment; //V
-    private String registerationState;
-    private String candidateStatus;
+    private String registerationState; //V
+    private String candidateStatus; //V
 
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -51,6 +51,11 @@ public class Candidate extends BaseEntitie{
     }
 
     public Candidate(){}
+
+    public boolean isValidObject(){
+        return (this.uid == ("") ||
+                this.candidateName.equals("")) ? false : true ;
+    }
 
     public String getUid() {
         return uid;
@@ -114,5 +119,19 @@ public class Candidate extends BaseEntitie{
 
     public void setEventObject(Event eventObject) {
         this.eventObject = eventObject;
+    }
+
+    @Override
+    public String toString() {
+        return "Candidate{" +
+                "uid='" + uid + '\'' +
+                ", eventDate='" + eventDate + '\'' +
+                ", scheduleDate='" + scheduleDate + '\'' +
+                ", candidateName='" + candidateName + '\'' +
+                ", comment='" + comment + '\'' +
+                ", registerationState='" + registerationState + '\'' +
+                ", candidateStatus='" + candidateStatus + '\'' +
+                ", eventObject=" + eventObject +
+                '}';
     }
 }
