@@ -8,6 +8,8 @@ public abstract class BaseEntitie {
     private int id;
     private boolean deleted;
 
+    //TODO add lastupdated prop
+
     public BaseEntitie(int id, boolean deleted) {
         this.id = id;
         this.deleted = deleted;

@@ -53,11 +53,12 @@
 
     </class>
 
-    <class name="com.project.Models.Event" table="Event" lazy="true">
+    <class name="com.project.Models.Invitation" table="Invitation" lazy="true">
         <id name="id" type="int" column="id">
             <generator class="native"/>
         </id>
         <property name="name" column="name" type="string"/>
+        <property name="studyYear" column="studyYear" type="string"/>
         <property name="deleted" type="boolean">
             <column name="deleted" default="false" />
         </property>
@@ -79,8 +80,8 @@
         <property name="deleted" type="boolean">
             <column name="deleted" default="false" />
         </property>
-        <many-to-one name="eventObject" column="event_id"
-                     class="com.project.Models.Event" />
+        <many-to-one name="invitationObject" column="event_id"
+                     class="com.project.Models.Invitation" />
     </class>
 
 </hibernate-mapping>

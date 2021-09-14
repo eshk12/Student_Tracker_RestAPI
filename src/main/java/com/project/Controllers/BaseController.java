@@ -30,7 +30,12 @@ public class BaseController {
                     .uniqueResult();
             if(user != null){
                 int departmentId = (user.getDepartmentObject() != null ) ? user.getDepartmentObject().getId() : 0;
-                authUser = new AuthUser(user.getPermission(), user.getInstituteObject().getId(), departmentId);
+                authUser = new AuthUser(
+                        user.getPermission(),
+                        user.getInstituteObject().getId(),
+                        departmentId,
+                        user.getFirstName()+" "+user.getLastName()
+                );
             }else{ //invalid token
                 authUser = new AuthUser(definitions.INVALID_TOKEN);
             }

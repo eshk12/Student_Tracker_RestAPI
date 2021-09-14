@@ -4,19 +4,23 @@ public class AuthUser {
     private int authUserpermission;
     private int authUserInstituteId;
     private int authUserDepartmentId;
+    private String authUser;
 
     public AuthUser(int authUserpermission) {
         this.authUserpermission = authUserpermission;
     }
+
+
     public AuthUser(int authUserpermission, int authUserInstituteId) {
         this.authUserpermission = authUserpermission;
         this.authUserInstituteId = authUserInstituteId;
     }
 
-    public AuthUser(int authUserpermission, int authUserInstituteId, int authUserDepartmentId) {
+    public AuthUser(int authUserpermission, int authUserInstituteId, int authUserDepartmentId, String authUser) {
         this.authUserpermission = authUserpermission;
         this.authUserInstituteId = authUserInstituteId;
         this.authUserDepartmentId = authUserDepartmentId;
+        this.authUser = authUser;
     }
 
     public int getAuthUserpermission() {
@@ -41,5 +45,13 @@ public class AuthUser {
 
     public void setAuthUserDepartmentId(int authUserDepartmentId) {
         this.authUserDepartmentId = authUserDepartmentId;
+    }
+
+    public String getAuthUser() {
+        return authUser;
+    }
+
+    public void setAuthUser(String authUser) {
+        this.authUser = authUser;
     }
 }

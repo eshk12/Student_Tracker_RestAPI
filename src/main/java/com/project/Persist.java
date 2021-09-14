@@ -42,4 +42,5 @@ public class Persist {
     public <T> T loadObject(Class<T> clazz, int oid) {
         return (T) getQuerySession().get(clazz, oid);
     }
+
 }

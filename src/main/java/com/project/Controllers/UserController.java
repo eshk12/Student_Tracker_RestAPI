@@ -10,6 +10,7 @@ import com.project.Utils.Definitions;
 import com.project.Utils.PasswordAuthentication;
 import com.project.Utils.Permissions;
 import org.apache.commons.validator.routines.EmailValidator;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -115,6 +116,7 @@ public class UserController extends BaseController {
                                 : authUser.getAuthUserInstituteId();
                 departmentId = departmentId != null ? departmentId : null;
                 user.setPassword(null); //unable to update password in this route.
+                user.setToken(null); //unable to update password in this route.
                 if (departmentId != null) {
                     //here we check if the department that inserted is belong to the user's institute or even exists.
                     List<Department> departmentList =
@@ -139,14 +141,18 @@ public class UserController extends BaseController {
 
                     User oldUser = persist.loadObject(User.class, user.getId());
                     if (authUser.getAuthUserpermission() == definitions.ADMIN_INSTITUTE_PERMISSION &&
-                            user.getPermission() > definitions.ADMIN_PERMISSION) {
+                            user.getPermission() == definitions.ADMIN_PERMISSION) {
                         user.setPermission(definitions.ADMIN_INSTITUTE_PERMISSION);
                     }
+                    if(departmentId != oldUser.getDepartmentObject().getId()) {
+                        Department departmentObject = departmentId != null ? persist.loadObject(Department.class, departmentId) : null;
+                        user.setDepartmentObject(departmentObject);
+                    }
 
-                    Department departmentObject = departmentId != null ? persist.loadObject(Department.class, departmentId) : null;
-                    Institute instituteObject = persist.loadObject(Institute.class, instituteId);
-                    user.setDepartmentObject(departmentObject);
-                    user.setInstituteObject(instituteObject); // because we allow user without department
+                    if(instituteId != oldUser.getInstituteObject().getId()) {
+                        Institute instituteObject = persist.loadObject(Institute.class, instituteId);
+                        user.setInstituteObject(instituteObject); // because we allow user without department
+                    }
 
                     if (user.getEmail() != null && !user.getEmail().equals(userRow.get(0).getEmail())) {
                         if (!validator.isValid(user.getEmail())) {
@@ -181,12 +187,21 @@ public class UserController extends BaseController {
     //UPDATE PASSWORD
 
     @RequestMapping(value = "/users/updateUserPassword", method = RequestMethod.POST)
-    public BasicResponseModel updateUserPassword(@RequestParam int id, @RequestParam String password, AuthUser authUser) {
+    public BasicResponseModel updateUserPassword(
+            @RequestParam int id,
+            @RequestParam String password,
+            @RequestParam String valid_password,
+            AuthUser authUser) {
         BasicResponseModel responseModel;
         if (permissions.validPermission(authUser.getAuthUserpermission(), definitions.ADMIN_INSTITUTE_PERMISSION)) {
-            if (id < 0 || password.length() == 0) {
+            if (id < 0 || password.length() == 0 || valid_password.length() == 0) {
                 responseModel = new BasicResponseModel(definitions.MISSING_FIELDS, definitions.MISSING_FIELDS_MSG);
-            } else {
+            }else if(!password.equals(valid_password)){
+                responseModel = new BasicResponseModel(definitions.PASSWORD_DONT_MATCH, definitions.PASSWORD_DONT_MATCH_MSG);
+            }else if(password.length() < 8){// no need to check if valid_password's length shorter than 8 because password == valid_password.
+                responseModel = new BasicResponseModel(definitions.PASSWORD_IS_SHORT, definitions.PASSWORD_IS_SHORT_MSG);
+            }
+            else {
                 String query = authUser.getAuthUserpermission() == definitions.ADMIN_PERMISSION
                         ? "FROM User WHERE id = :id AND :instituteId = :instituteId"
                         : "FROM User WHERE id = :id AND instituteObject.id = :instituteId"
@@ -204,6 +219,7 @@ public class UserController extends BaseController {
                 } else {
                     User oldUser = persist.loadObject(User.class, id);
                     oldUser.setPassword(passwordAuthentication.hashPassword(password));
+                    oldUser.setToken(null);
                     responseModel = new BasicResponseModel(oldUser);
                 }
             }
@@ -242,7 +258,7 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping(value = "/users/deleteUser", method = RequestMethod.POST)
-    public BasicResponseModel deleteUser(@RequestParam int id, @RequestParam boolean delete, AuthUser authUser) {
+    public BasicResponseModel deleteUser(@RequestParam int id, @RequestParam boolean deleted, AuthUser authUser) {
         BasicResponseModel responseModel;
         if (permissions.validPermission(authUser.getAuthUserpermission(), definitions.ADMIN_INSTITUTE_PERMISSION)) {
             if (id < 0) {
@@ -257,7 +273,7 @@ public class UserController extends BaseController {
                     responseModel = new BasicResponseModel(definitions.MULTI_RECORD, definitions.MULTI_RECORD_MSG);
                 } else {
                     User user = persist.loadObject(User.class, id);
-                    user.setDeleted(delete);
+                    user.setDeleted(deleted);
                     persist.save(user);
                     responseModel = new BasicResponseModel(user);
                 }
@@ -274,11 +290,27 @@ public class UserController extends BaseController {
     public BasicResponseModel getAllUsers(AuthUser authUser) {
         BasicResponseModel responseModel;
         if (permissions.validPermission(authUser.getAuthUserpermission(), definitions.ADMIN_INSTITUTE_PERMISSION)) {
-            List<User> allUsers = persist.getQuerySession().createQuery("FROM User").list();
+            Query queryObject;
+            if (permissions.validPermission(authUser.getAuthUserpermission(), definitions.ADMIN_PERMISSION)) {
+                queryObject = persist
+                        .getQuerySession()
+                        .createQuery("FROM User as user ORDER BY user.id DESC");
+            } else { //MIMNUM PERMISSION ADMIN_INSTITUTE_PERMISSION
+                queryObject = persist
+                        .getQuerySession()
+                        .createQuery("FROM User AS user WHERE instituteObject.id = :instituteId ORDER BY user.id DESC ")
+                        .setParameter("instituteId", authUser.getAuthUserInstituteId());
+            }
+            List<Department> allUsers = queryObject.list();
+
+
+
+
+            //List<User> allUsers = persist.getQuerySession().createQuery("FROM User as user ORDER BY user.id DESC").list();
             if (allUsers.isEmpty()) {
                 responseModel = new BasicResponseModel(definitions.EMPTY_LIST, definitions.EMPTY_LIST_MSG);
             } else {
-                responseModel = new BasicResponseModel(allUsers);
+                responseModel = new BasicResponseModel(allUsers, authUser);
             }
         } else if (authUser.getAuthUserpermission() == definitions.INVALID_TOKEN) {
             responseModel = new BasicResponseModel(definitions.INVALID_TOKEN, definitions.INVALID_TOKEN_MSG);

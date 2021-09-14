@@ -7,6 +7,7 @@ import com.project.Objects.Entities.BasicResponseModel;
 import com.project.Persist;
 import com.project.Utils.Definitions;
 import com.project.Utils.Permissions;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -17,16 +18,19 @@ import java.util.List;
 @Transactional
 public class DepartmentController extends BaseController {
 
-    @Autowired private Persist persist;
-    @Autowired private Definitions definitions;
-    @Autowired private Permissions permissions;
+    @Autowired
+    private Persist persist;
+    @Autowired
+    private Definitions definitions;
+    @Autowired
+    private Permissions permissions;
+
 
     @RequestMapping(value = "/department/add", method = RequestMethod.POST)
     public BasicResponseModel addDepartment(
-           @RequestParam String name,
-           @RequestParam(required = false) Integer instituteId,
-           AuthUser authUser)
-    {
+            @RequestParam String name,
+            @RequestParam(required = false) Integer instituteId,
+            AuthUser authUser) {
         BasicResponseModel responseModel;
         if (permissions.validPermission(authUser.getAuthUserpermission(), definitions.ADMIN_INSTITUTE_PERMISSION)) {
             List<Institute> instituteList = persist.getQuerySession().createQuery("FROM Institute WHERE id = :id")
@@ -39,7 +43,7 @@ public class DepartmentController extends BaseController {
                                 (authUser.getAuthUserpermission() == definitions.ADMIN_PERMISSION)
                                 ? instituteId
                                 : authUser.getAuthUserInstituteId();
-                if (name.equals(null) || name.equals("")|| instituteId <= 0) {
+                if (name.equals(null) || name.equals("") || instituteId <= 0) {
                     responseModel = new BasicResponseModel(definitions.MISSING_FIELDS, definitions.MISSING_FIELDS_MSG);
                 } else {
                     Institute instituteObject = persist.loadObject(Institute.class, instituteId);
@@ -90,9 +94,9 @@ public class DepartmentController extends BaseController {
                 } else {
                     if (instituteId > 0 && instituteId != departmentRow.get(0).getInstituteObject().getId()) { // we update the department.
                         Institute instituteObject = persist.loadObject(Institute.class, instituteId);
-                        if(instituteObject == null){
+                        if (instituteObject == null) {
                             responseModel = new BasicResponseModel(definitions.INSTITUTE_NOT_EXISTS, definitions.INSTITUTE_NOT_EXISTS_MSG);
-                        }else{
+                        } else {
                             //need to update
                             department.setInstituteObject(instituteObject);
                             Department oldDepartment = persist.loadObject(Department.class, department.getId());
@@ -175,11 +179,63 @@ public class DepartmentController extends BaseController {
     public BasicResponseModel getAllDepartments(AuthUser authUser) {
         BasicResponseModel responseModel;
         if (permissions.validPermission(authUser.getAuthUserpermission(), definitions.ADMIN_INSTITUTE_PERMISSION)) {
-            List<Department> allDepartments = persist.getQuerySession().createQuery("FROM Department AS dep ORDER BY dep.id DESC").list();
+            Query queryObject;
+            if (permissions.validPermission(authUser.getAuthUserpermission(), definitions.ADMIN_PERMISSION)) {
+                queryObject = persist
+                        .getQuerySession()
+                        .createQuery("FROM Department AS dep ORDER BY dep.id DESC");
+            } else { //MIMNUM PERMISSION ADMIN_INSTITUTE_PERMISSION
+                queryObject = persist
+                        .getQuerySession()
+                        .createQuery("FROM Department AS dep WHERE instituteObject.id = :instituteId ORDER BY dep.id DESC ")
+                        .setParameter("instituteId", authUser.getAuthUserInstituteId());
+            }
+            List<Department> allDepartments = queryObject.list();
+
             if (allDepartments.isEmpty()) {
                 responseModel = new BasicResponseModel(definitions.EMPTY_LIST, definitions.EMPTY_LIST_MSG);
             } else {
                 responseModel = new BasicResponseModel(allDepartments, authUser);
+            }
+        } else if (authUser.getAuthUserpermission() == definitions.INVALID_TOKEN) {
+            responseModel = new BasicResponseModel(definitions.INVALID_TOKEN, definitions.INVALID_TOKEN_MSG);
+        } else {
+            responseModel = new BasicResponseModel(definitions.NO_PERMISSIONS, definitions.NO_PERMISSIONS_MSG);
+        }
+        return responseModel;
+    }
+
+    @RequestMapping(value = "/department/getAllDepartmentsWithInstituteId", method = RequestMethod.GET)
+    public BasicResponseModel getAllDepartmentsWithInstituteId(
+            Integer instituteId,
+            AuthUser authUser) {
+        BasicResponseModel responseModel;
+        if (permissions.validPermission(authUser.getAuthUserpermission(), definitions.ADMIN_INSTITUTE_PERMISSION)) {
+            //if user is not ADMIN_PERMISSION THEN use authUser instituteId,
+            //if user has ADMIN_PERMISSION THEN use the inserted instituteId if exists.\
+            instituteId =
+                    (instituteId != null) &&
+                            (authUser.getAuthUserpermission() == definitions.ADMIN_PERMISSION)
+                            ? instituteId
+                            : authUser.getAuthUserInstituteId();
+            List<Institute> instituteRow = persist.getQuerySession().createQuery("FROM Institute WHERE id = :id")
+                    .setParameter("id", instituteId)
+                    .list();
+            if (instituteRow.isEmpty()) {
+                responseModel = new BasicResponseModel(definitions.INSTITUTE_NOT_FOUND, definitions.INSTITUTE_NOT_FOUND_MSG);
+            } else if (instituteRow.size() > 1) {
+                responseModel = new BasicResponseModel(definitions.MULTI_RECORD, definitions.MULTI_RECORD_MSG);
+            } else {
+                List<Department> allDepartments =
+                        persist.getQuerySession()
+                                .createQuery("FROM Department AS dep WHERE instituteObject.id = :instituteId ORDER BY dep.id DESC ")
+                                .setParameter("instituteId", instituteId)
+                                .list();
+                if (allDepartments.isEmpty()) {
+                    responseModel = new BasicResponseModel(definitions.EMPTY_LIST, definitions.EMPTY_LIST_MSG);
+                } else {
+                    responseModel = new BasicResponseModel(allDepartments, authUser);
+                }
             }
         } else if (authUser.getAuthUserpermission() == definitions.INVALID_TOKEN) {
             responseModel = new BasicResponseModel(definitions.INVALID_TOKEN, definitions.INVALID_TOKEN_MSG);

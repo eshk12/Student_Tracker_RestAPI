@@ -12,7 +12,7 @@ import java.security.spec.InvalidKeySpecException;
 @Component
 public class PasswordAuthentication {
 
-    public String hashPassword(final String password){
+    public String hashPassword(final String password) {
         return hashPassword(password.toCharArray());
     }
 
@@ -22,17 +22,17 @@ public class PasswordAuthentication {
         String salt = "#$@123654@$#";
         byte[] saltBytes = salt.getBytes();
         try {
-            SecretKeyFactory skf = SecretKeyFactory.getInstance( "PBKDF2WithHmacSHA512" );
-            PBEKeySpec spec = new PBEKeySpec( password, saltBytes, iterations, keyLength );
-            SecretKey key = skf.generateSecret( spec );
-            byte[] res = key.getEncoded( );
+            SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
+            PBEKeySpec spec = new PBEKeySpec(password, saltBytes, iterations, keyLength);
+            SecretKey key = skf.generateSecret(spec);
+            byte[] res = key.getEncoded();
             return Hex.encodeHexString(res);
-        } catch ( NoSuchAlgorithmException | InvalidKeySpecException e ) {
-            throw new RuntimeException( e );
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            throw new RuntimeException(e);
         }
     }
-    public String createLoginToken(String email, String password)
-    {
-        return hashPassword(email+":"+password);
+
+    public String createLoginToken(String email, String password) {
+        return hashPassword(String.format("%s:%s", email, password));
     }
 }

@@ -7,13 +7,13 @@ import com.project.Persist;
 import com.project.Utils.Definitions;
 import com.project.Utils.PasswordAuthentication;
 import org.apache.commons.validator.routines.EmailValidator;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class AuthController extends BaseController {
     @Autowired private Definitions definitions;
     @Autowired private PasswordAuthentication passwordAuthentication;
 
-    EmailValidator validator = EmailValidator.getInstance();
+        EmailValidator validator = EmailValidator.getInstance();
 
     @RequestMapping(value = "/authenticate/login", method = RequestMethod.POST)
     public BasicResponseModel getUser(@RequestParam String email, @RequestParam char[] password) {
@@ -50,20 +50,11 @@ public class AuthController extends BaseController {
 
                         AuthToken authToken = new AuthToken(
                                 newToken,
-                                userRow.getFirstName() + " " + userRow.getLastName(),
+                                String.format("%s %s",userRow.getFirstName(), userRow.getLastName()),
                                 userRow.getId(),
                                 userRow.getPermission()
                         );
                         responseModel = new BasicResponseModel(authToken);
-
-
-                        /*JSONObject jsonToReturn = new JSONObject();
-                        jsonToReturn.put("token", newToken);
-                        jsonToReturn.put("userid", userRow.getId());
-                        jsonToReturn.put("authUser", userRow.getFirstName() + " " + userRow.getLastName());
-                        jsonToReturn.put("permission", userRow.getPermission());
-                        responseModel = new BasicResponseModel(jsonToReturn.toString());*/
-
 
                     } else {
                         responseModel = new BasicResponseModel(definitions.LOGIN_FAILED_WRONG_PASSWORD, definitions.LOGIN_FAILED_WRONG_PASSWORD_MSG);

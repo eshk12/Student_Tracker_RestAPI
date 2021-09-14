@@ -13,6 +13,12 @@ public class Definitions {
     public final int EMAIL_EXISTS = 500;
     public final String EMAIL_EXISTS_MSG = "האימל קיים כבר במערכת";
 
+    public final int PASSWORD_IS_SHORT = 500;
+    public final String PASSWORD_IS_SHORT_MSG = "הסיסמא צריכה להיות באורך 8 תווים לפחות.";
+
+    public final int PASSWORD_DONT_MATCH = 500;
+    public final String PASSWORD_DONT_MATCH_MSG = "הסיסמאות צריכות להיות תואמות";
+
     public final int USER_NOT_FOUND = 501;
     public final String USER_NOT_FOUND_MSG = "משתמש לא קיים";
 
@@ -22,8 +28,11 @@ public class Definitions {
     public final int DEPARTMENT_NOT_FOUND = 501;
     public final String DEPARTMENT_NOT_FOUND_MSG = "החוג לא קיים במערכת.";
 
-    public final int EVENT_NOT_FOUND = 501;
-    public final String EVENT_NOT_FOUND_MSG = "האירוע לא קיים במערכת.";
+    public final int INVITATION_NOT_FOUND = 501;
+    public final String INVITATION_NOT_FOUND_MSG = "הזימון לא קיים במערכת.";
+
+    public final int CANDIDATE_NOT_FOUND = 501;
+    public final String CANDIDATE_NOT_FOUND_MSG = "המועמד לא נמצא במערכת.";
 
     public final int DEPARTMENTS_NOT_FOUND = 501;
     public final String DEPARTMENTS_NOT_FOUND_MSG = "לא קיימים חוגים במערכת.";
@@ -43,8 +52,6 @@ public class Definitions {
     public final int INSTITUTE_NOT_EXISTS = 610;
     public final String INSTITUTE_NOT_EXISTS_MSG = "המוסד לא קיים!";
 
-    public final int NO_INSTITUTE_EXISTS = 610;
-    public final String NO_INSTITUTE_EXISTS_MSG = "המוסד לא קיים!";
 
     public final int NO_PERMISSIONS = 998;
     public final String NO_PERMISSIONS_MSG = "אין הרשאה.";

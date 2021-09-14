@@ -57,7 +57,7 @@ public class UploadService {
 
     public BasicResponseModel uploadAndConvertXlsx2JSON(MultipartFile file) throws Exception {
         FileResponse uploadXlsx = uploadXlsx(file);
-        BasicResponseModel responseModel;
+        BasicResponseModel responseModel = null;
         if (uploadXlsx.getFailed() == null) {
             JsonArray jsonArray = new JsonArray();
             Workbook workbook = null;

@@ -1,6 +1,7 @@
 package com.project.Models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.project.Utils.Definitions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,8 @@ public class User extends BaseEntitie {
     private String uid;
     private String firstName;
     private String lastName;
+
+    @JsonIgnore
     private String password;
     private String email;
     private String phone;
@@ -59,8 +62,11 @@ public class User extends BaseEntitie {
         this.instituteObject = instituteObject;
     }
 
+
+    //TODO check why permission throw exceptions.
+    //|| (this.permission < definitions.ADMIN_PERMISSION || this.permission > definitions.GUEST_PERMISSION )
     public boolean objectIsEmpty() {
-        if (isEmpty(this.uid) || isEmpty(this.firstName) || isEmpty(this.lastName) || isEmpty(this.password) || isEmpty(this.phone) || (this.permission < definitions.ADMIN_PERMISSION || this.permission > definitions.GUEST_PERMISSION ) ) {
+        if (isEmpty(this.uid) || isEmpty(this.firstName) || isEmpty(this.lastName) || isEmpty(this.password) || isEmpty(this.phone) ) {
             return true;
         }
         return false;
