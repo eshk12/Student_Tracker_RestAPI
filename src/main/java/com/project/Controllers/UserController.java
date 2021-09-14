@@ -27,6 +27,21 @@ public class UserController extends BaseController {
     @Autowired private PasswordAuthentication passwordAuthentication;
 
 
+    private Query getQueryWithPermission(AuthUser authUser, int id){
+        Query queryObject;
+        if(permissions.validPermission(authUser.getAuthUserpermission(), definitions.ADMIN_PERMISSION)){
+            queryObject = persist.getQuerySession()
+                    .createQuery("FROM User WHERE id = :id")
+                    .setParameter("id", id);
+        }else{
+            queryObject = persist.getQuerySession()
+                    .createQuery("FROM User WHERE id = :id AND instituteObject.id = :instituteId")
+                    .setParameter("id", id)
+                    .setParameter("instituteId", authUser.getAuthUserInstituteId());
+        }
+        return queryObject;
+    }
+
 
     EmailValidator validator = EmailValidator.getInstance();
 
@@ -202,16 +217,7 @@ public class UserController extends BaseController {
                 responseModel = new BasicResponseModel(definitions.PASSWORD_IS_SHORT, definitions.PASSWORD_IS_SHORT_MSG);
             }
             else {
-                String query = authUser.getAuthUserpermission() == definitions.ADMIN_PERMISSION
-                        ? "FROM User WHERE id = :id AND :instituteId = :instituteId"
-                        : "FROM User WHERE id = :id AND instituteObject.id = :instituteId"
-                ;
-                List<User> userRow = persist.getQuerySession()
-                        .createQuery(query)
-                        .setParameter("id", id)
-                        .setParameter("instituteId", authUser.getAuthUserInstituteId())
-                        .list();
-
+                List<User> userRow = getQueryWithPermission(authUser, id).list();
                 if (userRow.isEmpty()) {
                     responseModel = new BasicResponseModel(definitions.USER_NOT_FOUND, definitions.USER_NOT_FOUND_MSG);
                 } else if (userRow.size() > 1) {
@@ -238,9 +244,7 @@ public class UserController extends BaseController {
             if (id < 0) {
                 responseModel = new BasicResponseModel(definitions.MISSING_FIELDS, definitions.MISSING_FIELDS_MSG);
             } else {
-                List<User> userRow = persist.getQuerySession().createQuery("FROM User WHERE id = :id")
-                        .setParameter("id", id)
-                        .list();
+                List<User> userRow = getQueryWithPermission(authUser, id).list();
                 if (userRow.isEmpty()) {
                     responseModel = new BasicResponseModel(definitions.USER_NOT_FOUND, definitions.USER_NOT_FOUND_MSG);
                 } else if (userRow.size() > 1) {
@@ -264,9 +268,7 @@ public class UserController extends BaseController {
             if (id < 0) {
                 responseModel = new BasicResponseModel(definitions.MISSING_FIELDS, definitions.MISSING_FIELDS_MSG);
             } else {
-                List<User> userRow = persist.getQuerySession().createQuery("FROM User WHERE id = :id")
-                        .setParameter("id", id)
-                        .list();
+                List<User> userRow = getQueryWithPermission(authUser, id).list();
                 if (userRow.isEmpty()) {
                     responseModel = new BasicResponseModel(definitions.USER_NOT_FOUND, definitions.USER_NOT_FOUND_MSG);
                 } else if (userRow.size() > 1) {
@@ -302,11 +304,6 @@ public class UserController extends BaseController {
                         .setParameter("instituteId", authUser.getAuthUserInstituteId());
             }
             List<Department> allUsers = queryObject.list();
-
-
-
-
-            //List<User> allUsers = persist.getQuerySession().createQuery("FROM User as user ORDER BY user.id DESC").list();
             if (allUsers.isEmpty()) {
                 responseModel = new BasicResponseModel(definitions.EMPTY_LIST, definitions.EMPTY_LIST_MSG);
             } else {

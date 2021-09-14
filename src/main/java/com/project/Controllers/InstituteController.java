@@ -83,7 +83,11 @@ public class InstituteController extends BaseController {
         return responseModel;
     }
     @RequestMapping(value = "/institute/deleteInstitute", method = RequestMethod.POST)
-    public BasicResponseModel deleteInstitute(@RequestParam int id, @RequestParam boolean delete, AuthUser authUser) {
+    public BasicResponseModel deleteInstitute(
+            @RequestParam int id,
+            @RequestParam boolean delete,
+            AuthUser authUser
+    ) {
         BasicResponseModel responseModel;
         if (permissions.validPermission(authUser.getAuthUserpermission(), definitions.ADMIN_PERMISSION)) {
             if (id < 0) {
@@ -112,7 +116,10 @@ public class InstituteController extends BaseController {
     }
 
     @RequestMapping(value = "/institute/update", method = RequestMethod.POST)
-    public BasicResponseModel updateInstitute(@ModelAttribute("Institute") Institute institute, AuthUser authUser) {
+    public BasicResponseModel updateInstitute(
+            @ModelAttribute("Institute") Institute institute,
+            AuthUser authUser
+    ) {
         BasicResponseModel responseModel;
         if (permissions.validPermission(authUser.getAuthUserpermission(), definitions.ADMIN_PERMISSION)) {
             if (institute.getId() <= 0) {

@@ -34,7 +34,7 @@ public class BaseController {
                         user.getPermission(),
                         user.getInstituteObject().getId(),
                         departmentId,
-                        user.getFirstName()+" "+user.getLastName()
+                        String.format("%s %s", user.getFirstName(), user.getLastName())
                 );
             }else{ //invalid token
                 authUser = new AuthUser(definitions.INVALID_TOKEN);

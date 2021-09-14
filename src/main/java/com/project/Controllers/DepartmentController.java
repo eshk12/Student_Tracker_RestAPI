@@ -18,14 +18,22 @@ import java.util.List;
 @Transactional
 public class DepartmentController extends BaseController {
 
-    @Autowired
-    private Persist persist;
-    @Autowired
-    private Definitions definitions;
-    @Autowired
-    private Permissions permissions;
+    @Autowired private Persist persist;
+    @Autowired private Definitions definitions;
+    @Autowired private Permissions permissions;
 
-
+    private Query getQueryWithPermission(AuthUser authUser, int id){
+        Query queryObject;
+        if(permissions.validPermission(authUser.getAuthUserpermission(), definitions.ADMIN_PERMISSION)){
+            queryObject = persist.getQuerySession().createQuery("FROM Department WHERE id = :id")
+                    .setParameter("id", id);
+        }else{
+            queryObject = persist.getQuerySession().createQuery("FROM Department WHERE id = :id AND instituteObject.id = :instituteId")
+                    .setParameter("id", id)
+                    .setParameter("instituteId", authUser.getAuthUserInstituteId());
+        }
+        return queryObject;
+    }
     @RequestMapping(value = "/department/add", method = RequestMethod.POST)
     public BasicResponseModel addDepartment(
             @RequestParam String name,
@@ -36,9 +44,10 @@ public class DepartmentController extends BaseController {
             List<Institute> instituteList = persist.getQuerySession().createQuery("FROM Institute WHERE id = :id")
                     .setParameter("id", authUser.getAuthUserInstituteId())
                     .list();
-            if (!instituteList.isEmpty()) {
+            if (!instituteList.isEmpty()) {//here we check if the instituteId inserted is exists
 
-                instituteId =
+                instituteId = //here we check if ADMIN_INSTITUTE_PERMISSION enter another instituteId of its own,
+                              // if he is so we cast it into  his instituteId.
                         (instituteId != null) &&
                                 (authUser.getAuthUserpermission() == definitions.ADMIN_PERMISSION)
                                 ? instituteId
@@ -84,9 +93,7 @@ public class DepartmentController extends BaseController {
             if (department.getId() <= 0) {
                 responseModel = new BasicResponseModel(definitions.MISSING_FIELDS, definitions.MISSING_FIELDS_MSG);
             } else {
-                List<Department> departmentRow = persist.getQuerySession().createQuery("FROM Department WHERE id = :id")
-                        .setParameter("id", department.getId())
-                        .list();
+                List<Department> departmentRow = getQueryWithPermission(authUser, department.getId()).list();
                 if (departmentRow.isEmpty()) {
                     responseModel = new BasicResponseModel(definitions.DEPARTMENT_NOT_FOUND, definitions.DEPARTMENT_NOT_FOUND_MSG);
                 } else if (departmentRow.size() > 1) {
@@ -127,9 +134,7 @@ public class DepartmentController extends BaseController {
             if (id < 0) {
                 responseModel = new BasicResponseModel(definitions.MISSING_FIELDS, definitions.MISSING_FIELDS_MSG);
             } else {
-                List<Department> departmentRow = persist.getQuerySession().createQuery("FROM Department WHERE id = :id")
-                        .setParameter("id", id)
-                        .list();
+                List<Department> departmentRow = getQueryWithPermission(authUser, id).list();
                 if (departmentRow.isEmpty()) {
                     responseModel = new BasicResponseModel(definitions.DEPARTMENT_NOT_FOUND, definitions.DEPARTMENT_NOT_FOUND_MSG);
                 } else if (departmentRow.size() > 1) {
@@ -156,9 +161,7 @@ public class DepartmentController extends BaseController {
             if (id < 0) {
                 responseModel = new BasicResponseModel(definitions.MISSING_FIELDS, definitions.MISSING_FIELDS_MSG);
             } else {
-                List<Department> departmentRow = persist.getQuerySession().createQuery("FROM Department WHERE id = :id")
-                        .setParameter("id", id)
-                        .list();
+                List<Department> departmentRow = getQueryWithPermission(authUser, id).list();
                 if (departmentRow.isEmpty()) {
                     responseModel = new BasicResponseModel(definitions.DEPARTMENT_NOT_FOUND, definitions.DEPARTMENT_NOT_FOUND_MSG);
                 } else if (departmentRow.size() > 1) {
@@ -249,7 +252,15 @@ public class DepartmentController extends BaseController {
     public BasicResponseModel getAllInstitutes(AuthUser authUser) {
         BasicResponseModel responseModel;
         if (permissions.validPermission(authUser.getAuthUserpermission(), definitions.ADMIN_INSTITUTE_PERMISSION)) {
-            List<Institute> allInstitutes = persist.getQuerySession().createQuery("FROM Institute AS ins ORDER BY ins.id DESC").list();
+            Query queryObject;
+            if(permissions.validPermission(authUser.getAuthUserpermission(), definitions.ADMIN_PERMISSION)){
+                queryObject = persist.getQuerySession().createQuery("FROM Institute AS ins ORDER BY ins.id DESC");
+
+            }else{
+                queryObject = persist.getQuerySession().createQuery("FROM Institute AS ins WHERE id = :id ORDER BY ins.id DESC")
+                        .setParameter("id", authUser.getAuthUserInstituteId());
+            }
+            List<Institute> allInstitutes = queryObject.list();
             if (allInstitutes.isEmpty()) {
                 responseModel = new BasicResponseModel(definitions.EMPTY_LIST, definitions.EMPTY_LIST_MSG);
             } else {

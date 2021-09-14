@@ -94,10 +94,10 @@ public class AppConfig {
 
     private Map<String, String> getDbProps () throws Exception {
         Map<String, String> propsMap = new HashMap<>();
-        propsMap.put("user", "root");
-        propsMap.put("password", "");
-        /*propsMap.put("user", "tracker");
-        propsMap.put("password", "jmcSJD^%ED983.1!");*/
+        /*propsMap.put("user", "root");
+        propsMap.put("password", "");*/
+        propsMap.put("user", "trackeruser");
+        propsMap.put("password", "Eb6ghyl2h9g!");
         propsMap.put("server", "localhost");
         propsMap.put("database", "tracker");
         return propsMap;

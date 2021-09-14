@@ -55,13 +55,16 @@ public class InvitationController extends BaseController {
             AuthUser authUser) {
         BasicResponseModel responseModel;
         if (permissions.validPermission(authUser.getAuthUserpermission(), definitions.ADMIN_DEPARTMENT_PERMISSION)) {
-            String query = authUser.getAuthUserpermission() == definitions.ADMIN_PERMISSION
-                    ? "FROM Department WHERE id = :id AND :instituteId = :instituteId" // 1 = 1
-                    : "FROM Department WHERE id = :id AND instituteObject.id = :instituteId";
-            List<Department> departmentList = persist.getQuerySession().createQuery(query)
-                    .setParameter("id", departmentId)
-                    .setParameter("instituteId", authUser.getAuthUserInstituteId())
-                    .list();
+            Query queryObject;
+            if(permissions.validPermission(authUser.getAuthUserpermission(), definitions.ADMIN_PERMISSION)){
+                queryObject = persist.getQuerySession().createQuery("FROM Department WHERE id = :id")
+                        .setParameter("id", departmentId);
+            }else{
+                queryObject = persist.getQuerySession().createQuery("FROM Department WHERE id = :id AND instituteObject.id = :instituteId")
+                        .setParameter("id", departmentId)
+                        .setParameter("instituteId", authUser.getAuthUserInstituteId());
+            }
+            List<Department> departmentList = queryObject.list();
             if (!departmentList.isEmpty()) {
                 departmentId =
                         (departmentId != null) &&
