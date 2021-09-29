@@ -1,57 +1,91 @@
 package com.project.Objects.Entities;
 
 public class AuthUser {
-    private int authUserpermission;
-    private int authUserInstituteId;
-    private int authUserDepartmentId;
-    private String authUser;
+    private int authUser_id;
+    private int authUser_permission;
+    private int authUser_instituteId;
+    private int authUser_departmentId;
+    private String authUser_username;
+    private String authUser_token;
 
-    public AuthUser(int authUserpermission) {
-        this.authUserpermission = authUserpermission;
+    public AuthUser(int authUser_permission) {
+        this.authUser_permission = authUser_permission;
     }
 
-
-    public AuthUser(int authUserpermission, int authUserInstituteId) {
-        this.authUserpermission = authUserpermission;
-        this.authUserInstituteId = authUserInstituteId;
+    public AuthUser(int authUser_id, int authUser_permission, int authUser_instituteId, int authUser_departmentId, String authUser_username, String authUser_token) {
+        this.authUser_id = authUser_id;
+        this.authUser_permission = authUser_permission;
+        this.authUser_instituteId = authUser_instituteId;
+        this.authUser_departmentId = authUser_departmentId;
+        this.authUser_username = authUser_username;
+        this.authUser_token = authUser_token;
     }
 
-    public AuthUser(int authUserpermission, int authUserInstituteId, int authUserDepartmentId, String authUser) {
-        this.authUserpermission = authUserpermission;
-        this.authUserInstituteId = authUserInstituteId;
-        this.authUserDepartmentId = authUserDepartmentId;
-        this.authUser = authUser;
+    public AuthUser(int authUser_id, int authUser_permission, int authUser_instituteId, String authUser_username, String authUser_token) {
+        this.authUser_id = authUser_id;
+        this.authUser_permission = authUser_permission;
+        this.authUser_instituteId = authUser_instituteId;
+        this.authUser_username = authUser_username;
+        this.authUser_token = authUser_token;
     }
 
-    public int getAuthUserpermission() {
-        return authUserpermission;
+    public int getAuthUser_id() {
+        return authUser_id;
     }
 
-    public void setAuthUserpermission(int authUserpermission) {
-        this.authUserpermission = authUserpermission;
+    public void setAuthUser_id(int authUser_id) {
+        this.authUser_id = authUser_id;
     }
 
-    public int getAuthUserInstituteId() {
-        return authUserInstituteId;
+    public int getAuthUser_permission() {
+        return authUser_permission;
     }
 
-    public void setAuthUserInstituteId(int authUserInstituteId) {
-        this.authUserInstituteId = authUserInstituteId;
+    public void setAuthUser_permission(int authUser_permission) {
+        this.authUser_permission = authUser_permission;
     }
 
-    public int getAuthUserDepartmentId() {
-        return authUserDepartmentId;
+    public int getAuthUser_instituteId() {
+        return authUser_instituteId;
     }
 
-    public void setAuthUserDepartmentId(int authUserDepartmentId) {
-        this.authUserDepartmentId = authUserDepartmentId;
+    public void setAuthUser_instituteId(int authUser_instituteId) {
+        this.authUser_instituteId = authUser_instituteId;
     }
 
-    public String getAuthUser() {
-        return authUser;
+    public int getAuthUser_departmentId() {
+        return authUser_departmentId;
     }
 
-    public void setAuthUser(String authUser) {
-        this.authUser = authUser;
+    public void setAuthUser_departmentId(int authUser_departmentId) {
+        this.authUser_departmentId = authUser_departmentId;
+    }
+
+    public String getAuthUser_username() {
+        return authUser_username;
+    }
+
+    public void setAuthUser_username(String authUser_username) {
+        this.authUser_username = authUser_username;
+    }
+
+    public String getAuthUser_token() {
+        return authUser_token;
+    }
+
+    public void setAuthUser_token(String authUser_token) {
+        this.authUser_token = authUser_token;
+    }
+
+    @Override
+    public String toString() {
+        return "AuthUser{" +
+                "authUser_id=" + authUser_id +
+                ", authUser_permission=" + authUser_permission +
+                ", authUser_instituteId=" + authUser_instituteId +
+                ", authUser_departmentId=" + authUser_departmentId +
+                ", authUser_username='" + authUser_username + '\'' +
+                ", authUser_token='" + authUser_token + '\'' +
+                '}';
     }
 }

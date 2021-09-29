@@ -4,12 +4,13 @@ package com.project.Models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.project.Utils.Definitions;
+import com.project.Utils.Permissions;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class User extends BaseEntitie {
 
-    @Autowired
-    private Definitions definitions;
+    @Autowired private Definitions definitions;
+    @Autowired private Permissions permissions;
 
     private String uid;
     private String firstName;
@@ -62,11 +63,21 @@ public class User extends BaseEntitie {
         this.instituteObject = instituteObject;
     }
 
-
-    //TODO check why permission throw exceptions.
-    //|| (this.permission < definitions.ADMIN_PERMISSION || this.permission > definitions.GUEST_PERMISSION )
+    public User(int id, String uid, String firstName, String lastName, String phone) {
+        super(id);
+        this.uid = uid;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+    }
     public boolean objectIsEmpty() {
-        if (isEmpty(this.uid) || isEmpty(this.firstName) || isEmpty(this.lastName) || isEmpty(this.password) || isEmpty(this.phone) ) {
+        if (
+            isEmpty(this.uid) ||
+            isEmpty(this.firstName) ||
+            isEmpty(this.lastName) ||
+            isEmpty(this.password) ||
+            isEmpty(this.phone)
+        ) {
             return true;
         }
         return false;
@@ -157,5 +168,21 @@ public class User extends BaseEntitie {
 
     public void setInstituteObject(Institute instituteObject) {
         this.instituteObject = instituteObject;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                ", uid='" + uid + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", token='" + token + '\'' +
+                ", permission=" + permission +
+                ", departmentObject=" + departmentObject +
+                ", instituteObject=" + instituteObject +
+                '}';
     }
 }

@@ -52,6 +52,8 @@ public class Definitions {
     public final int INSTITUTE_NOT_EXISTS = 610;
     public final String INSTITUTE_NOT_EXISTS_MSG = "המוסד לא קיים!";
 
+    public final int INITILIZE_FAILED = 610;
+    public final String INITILIZE_FAILED_MSG = "האתחול נכשל.";
 
     public final int NO_PERMISSIONS = 998;
     public final String NO_PERMISSIONS_MSG = "אין הרשאה.";
@@ -71,11 +73,15 @@ public class Definitions {
     public final int UPLOAD_FAILED_INVALID_XLSX_FILE = 505;
     public final String UPLOAD_FAILED_INVALID_XLSX_FILE_MSG = "קובץ אקסל לא תקין.";
 
+    public final String FPWD_EMAIL_SENT = "נשלח דואר אלקטרוני עם הוראות לאיפוס הסיסמא!";
+
     //PERMISSIONS
     public final int ADMIN_PERMISSION = 1;
     public final int ADMIN_INSTITUTE_PERMISSION = 2;
     public final int ADMIN_DEPARTMENT_PERMISSION = 3;
     public final int GUEST_PERMISSION = 4;
+    public final int LOWEST_LOGGED_IN_PERMISSION = 3;
+    public final int HIGHEST_LOGGED_IN_PERMISSION = 1;
 
     //CANDIDATE STATE
     public final int CANDIDATE_ALREADY_SET_SCHEDULE = 1;

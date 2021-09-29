@@ -75,7 +75,6 @@ public class UploadService {
                     add("candidateName");
                     add("candidateStatus");
                     add("registerationState");
-                    add("scheduleDate");
                     add("comment");
                 }};
                 ArrayList<String> columnNames = new ArrayList<String>();

@@ -74,9 +74,20 @@
         <property name="eventDate" column="eventDate" type="string"/>
         <property name="scheduleDate" column="scheduleDate" type="string"/>
         <property name="candidateName" column="candidateName" type="string"/>
-        <property name="comment" column="comment" type="string"/>
+        <!--<property name="comment" column="comment" type="string"/>
         <property name="registerationState" column="registerationState" type="string"/>
-        <property name="candidateStatus" column="candidateStatus" type="string"/>
+        <property name="candidateStatus" column="candidateStatus" type="string"/>-->
+
+        <property name="comment" type="string">
+            <column name="comment" default="''" />
+        </property>
+        <property name="registerationState" type="string">
+            <column name="registerationState" default="''" />
+        </property>
+        <property name="candidateStatus" type="string">
+            <column name="candidateStatus" default="''" />
+        </property>
+
         <property name="deleted" type="boolean">
             <column name="deleted" default="false" />
         </property>

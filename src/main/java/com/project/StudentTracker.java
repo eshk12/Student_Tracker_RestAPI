@@ -9,12 +9,11 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication(exclude = HibernateJpaAutoConfiguration.class)
 @EnableScheduling
-public class Sample {
+public class StudentTracker {
     public static boolean applicationStarted = false;
-    private static final Logger LOGGER = LoggerFactory.getLogger(Sample.class);
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(StudentTracker.class);
     public static void main(String[] args) {
-        ConfigurableApplicationContext context = SpringApplication.run(Sample.class, args);
+        ConfigurableApplicationContext context = SpringApplication.run(StudentTracker.class, args);
         LOGGER.info("Application started.");
         applicationStarted = true;
     }

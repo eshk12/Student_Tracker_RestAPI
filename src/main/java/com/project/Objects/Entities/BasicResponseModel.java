@@ -15,11 +15,6 @@ public class BasicResponseModel {
     public BasicResponseModel(Object object) {
         this.object = object;
     }
-    public BasicResponseModel(Object object, AuthUser authUser) {
-        this.object = object;
-        this.authUser = authUser;
-    }
-
     public BasicResponseModel(String customMessage, Object object) {
         this.customMessage = customMessage;
         this.object = object;

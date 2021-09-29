@@ -1,6 +1,7 @@
 package com.project;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.project.Interceptors.AuthInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,7 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -25,7 +27,14 @@ import java.util.Properties;
  */
 @Configuration
 @Profile("production")
-public class AppConfig {
+public class AppConfig implements WebMvcConfigurer{
+
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry)
+    {
+        registry.addInterceptor(new AuthInterceptor());
+    }
 
     @Bean
     public DataSource dataSource() throws Exception {
@@ -94,12 +103,19 @@ public class AppConfig {
 
     private Map<String, String> getDbProps () throws Exception {
         Map<String, String> propsMap = new HashMap<>();
-        /*propsMap.put("user", "root");
-        propsMap.put("password", "");*/
-        propsMap.put("user", "trackeruser");
-        propsMap.put("password", "Eb6ghyl2h9g!");
+        //dev
         propsMap.put("server", "localhost");
         propsMap.put("database", "tracker");
+        propsMap.put("user", "root");
+        propsMap.put("password", "");
+        /*
+        //prod
+        propsMap.put("server", "localhost");
+        propsMap.put("user", "stracker_db");
+        propsMap.put("password", "Eb6ghyl2h9g!");
+        propsMap.put("database", "stracker_db");
+        */
+
         return propsMap;
     }
 }

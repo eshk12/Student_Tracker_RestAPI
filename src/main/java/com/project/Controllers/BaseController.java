@@ -12,11 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 
 @Transactional
 public class BaseController {
-    @Autowired
-    private Persist persist;
-
-    @Autowired
-    private Definitions definitions;
+    @Autowired private Persist persist;
+    @Autowired private Definitions definitions;
 
     @ModelAttribute
     public AuthUser isUserAuthenticated(HttpServletRequest request){
@@ -31,10 +28,12 @@ public class BaseController {
             if(user != null){
                 int departmentId = (user.getDepartmentObject() != null ) ? user.getDepartmentObject().getId() : 0;
                 authUser = new AuthUser(
+                        user.getId(),
                         user.getPermission(),
                         user.getInstituteObject().getId(),
-                        departmentId,
-                        String.format("%s %s", user.getFirstName(), user.getLastName())
+                        (user.getInstituteObject() != null) ? user.getInstituteObject().getId() : null,
+                        String.format("%s %s",user.getFirstName(), user.getLastName()),
+                        user.getToken()
                 );
             }else{ //invalid token
                 authUser = new AuthUser(definitions.INVALID_TOKEN);

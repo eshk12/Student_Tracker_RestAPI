@@ -19,6 +19,10 @@ public abstract class BaseEntitie {
         this.deleted = deleted;
     }
 
+    public BaseEntitie(int id) {
+        this.id = id;
+    }
+
     public BaseEntitie() {
     }
 
