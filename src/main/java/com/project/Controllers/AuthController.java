@@ -25,13 +25,15 @@ public class AuthController extends BaseController {
     @Autowired private Definitions definitions;
     @Autowired private PasswordAuthentication passwordAuthentication;
 
-        EmailValidator validator = EmailValidator.getInstance();
+    EmailValidator validator = EmailValidator.getInstance();
 
     @RequestMapping(value = "/authenticate/login", method = RequestMethod.POST)
     public BasicResponseModel getUser(@RequestParam String email, @RequestParam char[] password) {
         BasicResponseModel responseModel;
         if (email.length() == 0 || password.length == 0) {
             responseModel = new BasicResponseModel(definitions.MISSING_FIELDS, definitions.MISSING_FIELDS_MSG);
+        }else if(!validator.isValid(email)){
+            responseModel = new BasicResponseModel(definitions.INVALID_EMAIL, definitions.INVALID_EMAIL_MSG);
         } else {
             List<User> user = persist.getQuerySession().createQuery("FROM User WHERE email = :email")
                     .setParameter("email", email)
