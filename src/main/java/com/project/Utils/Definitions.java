@@ -83,6 +83,22 @@ public class Definitions {
     public final int LOWEST_LOGGED_IN_PERMISSION = 3;
     public final int HIGHEST_LOGGED_IN_PERMISSION = 1;
 
+    //STATISTICS TITLES & ICONS
+    public final String STATS_INSTITUTE_TITLE = "מוסדות רשומים";
+    public final String STATS_INSTITUTE_ICON = "uil uil-university me-3";
+
+    public final String STATS_DEPARTMENT_TITLE = "חוגים קיימים";
+    public final String STATS_DEPARTMENT_ICON = "uil uil-book me-3";
+
+    public final String STATS_USER_TITLE = "משתמשים רשומים";
+    public final String STATS_USER_ICON = "uil uil-users-alt me-3";
+
+    public final String STATS_INVITATION_TITLE = "זימונים קיימים";
+    public final String STATS_INVITATION_ICON = "uil-telegram-alt me-3";
+
+    public final String STATS_CANDIDATE_TITLE = "מועמדים קיימים";
+    public final String STATS_CANDIDATE_ICON = "uil uil-book-reader me-3";
+
     //CANDIDATE STATE
     public final int CANDIDATE_ALREADY_SET_SCHEDULE = 1;
     public final int CANDIDATE_WILL_SET_SCHEDULE_LATER = 2;

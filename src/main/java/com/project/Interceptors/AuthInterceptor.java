@@ -38,6 +38,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
                     "(execution(* com.project.Controllers.UserController.*(..))) ||" +
                     "(execution(* com.project.Controllers.InvitationController.*(..))) ||" +
                     "(execution(* com.project.Controllers.CandidateController.*(..))) ||" +
+                    "(execution(* com.project.Controllers.StatisticsController.*(..))) ||" +
                     "(execution(* com.project.Controllers.ProfileController.*(..)))",
             returning = "result")
     public void afterReturning(JoinPoint joinPoint, Object result) {

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class Invitation extends BaseEntitie{
     private String name;
     private String studyYear;
+    private Long numOfCandidates;
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Department departmentObject;
@@ -68,5 +69,13 @@ public class Invitation extends BaseEntitie{
 
     public void setDepartmentObject(Department departmentObject) {
         this.departmentObject = departmentObject;
+    }
+
+    public Long getNumOfCandidates() {
+        return numOfCandidates;
+    }
+
+    public void setNumOfCandidates(Long numOfCandidates) {
+        this.numOfCandidates = numOfCandidates;
     }
 }
