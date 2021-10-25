@@ -74,12 +74,14 @@
         <property name="eventDate" column="eventDate" type="string"/>
         <property name="scheduleDate" column="scheduleDate" type="string"/>
         <property name="candidateName" column="candidateName" type="string"/>
+        <property name="email" column="email" type="string"/>
+        <property name="phoneNumber" column="phoneNumber" type="string"/>
 
         <property name="comment" type="string">
             <column name="comment" default="''" />
         </property>
         <property name="registerationState" type="string">
-            <column name="registerationState" default="''" />
+            <column name="registerationState" default="0" />
         </property>
         <property name="candidateStatus" type="string">
             <column name="candidateStatus" default="0" />

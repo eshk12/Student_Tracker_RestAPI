@@ -7,6 +7,8 @@ public class Candidate extends BaseEntitie{
     private String eventDate;
     private String scheduleDate; //v
     private String candidateName; //V
+    private String email;
+    private String phoneNumber;
     private String comment; //V
     private String registerationState; //V
     private String candidateStatus; //V
@@ -15,7 +17,7 @@ public class Candidate extends BaseEntitie{
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Invitation invitationObject;
 
-    public Candidate(int id, String uid, String eventDate, String scheduleDate, String candidateName, String comment, String registerationState, String candidateStatus, Invitation invitationObject, boolean deleted) {
+    public Candidate(int id, String uid, String eventDate, String scheduleDate, String candidateName, String email, String phoneNumber, String comment, String registerationState, String candidateStatus, Invitation invitationObject, boolean deleted) {
         super(id, deleted);
         this.uid = uid;
         this.eventDate = eventDate;
@@ -27,7 +29,7 @@ public class Candidate extends BaseEntitie{
         this.invitationObject = invitationObject;
     }
 
-    public Candidate(String uid, String eventDate, String scheduleDate, String candidateName, String comment, String registerationState, String candidateStatus, Invitation invitationObject, boolean deleted) {
+    public Candidate(String uid, String eventDate, String scheduleDate, String candidateName, String email, String phoneNumber, String comment, String registerationState, String candidateStatus, Invitation invitationObject, boolean deleted) {
         super(deleted);
         this.uid = uid;
         this.eventDate = eventDate;
@@ -39,7 +41,7 @@ public class Candidate extends BaseEntitie{
         this.invitationObject = invitationObject;
     }
 
-    public Candidate(String uid, String eventDate, String scheduleDate, String candidateName, String comment, String registerationState, String candidateStatus, Invitation invitationObject) {
+    public Candidate(String uid, String eventDate, String scheduleDate, String candidateName, String email, String phoneNumber, String comment, String registerationState, String candidateStatus, Invitation invitationObject) {
         this.uid = uid;
         this.eventDate = eventDate;
         this.scheduleDate = scheduleDate;
@@ -54,7 +56,10 @@ public class Candidate extends BaseEntitie{
 
     public boolean isValidObject(){
         return (this.uid == ("") ||
-                this.candidateName.equals("")) ? false : true ;
+                this.candidateName.equals("") ||
+                this.email.equals("") ||
+                this.phoneNumber.equals("")
+        ) ? false : true ;
     }
 
     public String getUid() {
@@ -87,6 +92,22 @@ public class Candidate extends BaseEntitie{
 
     public void setCandidateName(String candidateName) {
         this.candidateName = candidateName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getComment() {

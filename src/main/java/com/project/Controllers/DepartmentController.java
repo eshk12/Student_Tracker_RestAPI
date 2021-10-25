@@ -72,8 +72,6 @@ public class DepartmentController extends BaseController {
         } else {
             responseModel = new BasicResponseModel(definitions.NO_PERMISSIONS, definitions.NO_PERMISSIONS_MSG);
         }
-
-
         return responseModel;
     }
 
@@ -82,7 +80,6 @@ public class DepartmentController extends BaseController {
             @ModelAttribute("Department") Department department,
             @RequestParam(required = false) Integer instituteId,
             AuthUser authUser) {
-
         BasicResponseModel responseModel;
         if (permissions.validPermission(authUser.getAuthUser_permission(), definitions.ADMIN_INSTITUTE_PERMISSION)) {
             instituteId =

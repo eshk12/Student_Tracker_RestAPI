@@ -26,7 +26,7 @@ public class BaseController {
                     .setParameter("token", token)
                     .uniqueResult();
             if(user != null){
-                int departmentId = (user.getDepartmentObject() != null ) ? user.getDepartmentObject().getId() : 0;
+               // int departmentId = (user.getDepartmentObject() != null ) ? user.getDepartmentObject().getId() : 0;
                 authUser = new AuthUser(
                         user.getId(),
                         user.getPermission(),

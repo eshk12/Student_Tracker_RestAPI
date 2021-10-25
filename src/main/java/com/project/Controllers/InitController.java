@@ -40,7 +40,7 @@ public class InitController {
                     "05",
                     "Itzik",
                     "Barabie",
-                    "a2b1c4d3",
+                    "12345678",
                     "itshakbar@gmail.com",
                     "052-3937296",
                     "",

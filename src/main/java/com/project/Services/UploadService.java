@@ -73,6 +73,8 @@ public class UploadService {
                 ArrayList<String> columnNamesForCheck = new ArrayList<String>() {{
                     add("uid");
                     add("candidateName");
+                    add("email");
+                    add("phoneNumber");
                     add("candidateStatus");
                     add("registerationState");
                     add("comment");

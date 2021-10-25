@@ -103,12 +103,24 @@ public class CandidateController extends BaseController {
                             Candidate candidate = new Candidate();
                             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                             JsonObject can = candidates.get(i).getAsJsonObject();
-                            if (can.get("uid") != null && can.get("candidateName") != null) { //uid and canidatenName is not null
-                                if (can.get("uid").getAsString().equals("") || can.get("candidateName").getAsString().equals("")) {
+                            if (
+                                    can.get("uid") != null &&
+                                    can.get("candidateName") != null &&
+                                    can.get("email") != null &&
+                                    can.get("phoneNumber") != null
+                            ) { //uid and canidatenName is not null
+                                if (
+                                        can.get("uid").getAsString().equals("") ||
+                                        can.get("candidateName").getAsString().equals("") ||
+                                        can.get("email").getAsString().equals("") ||
+                                        can.get("phoneNumber").getAsString().equals("")
+                                ) {
                                     candidatesStatus.add(new CandidatesState(can.get("candidateName").getAsString(), true));
                                 } else {
                                     candidate.setUid(can.get("uid").getAsString()); //required
                                     candidate.setCandidateName(can.get("candidateName").getAsString()); // required
+                                    candidate.setEmail(can.get("email").getAsString()); // required
+                                    candidate.setPhoneNumber(can.get("phoneNumber").getAsString()); // required
                                     candidate.setEventDate(String.valueOf(timestamp.getTime()));
 
 
