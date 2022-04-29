@@ -101,8 +101,8 @@ public class AppConfig implements WebMvcConfigurer{
         //dev
         propsMap.put("server", "mysql_container");
         propsMap.put("database", "tracker");
-        propsMap.put("user", "root");
-        propsMap.put("password", "");
+        propsMap.put("user", "tracker");
+        propsMap.put("password", "5080");
 
         return propsMap;
     }
