@@ -95,13 +95,13 @@ public class AppConfig implements WebMvcConfigurer{
     public StandardServletMultipartResolver multipartResolver() {
         return new StandardServletMultipartResolver();
     }
-
+    
     private Map<String, String> getDbProps () throws Exception {
         Map<String, String> propsMap = new HashMap<>();
         //dev
-        propsMap.put("server", "mysql_container");
+        propsMap.put("server", "mysqldb");
         propsMap.put("database", "tracker");
-        propsMap.put("user", "tracker");
+        propsMap.put("user", "root");
         propsMap.put("password", "5080");
 
         return propsMap;
