@@ -107,3 +107,6 @@ public class AppConfig implements WebMvcConfigurer{
         return propsMap;
     }
 }
+
+
+// docker container run --name mysqldb --network XXX -e MYSQL_ROOT_PASSWORD=5080 -e MYSQL_DATABASE=tracker -d mysql:8
