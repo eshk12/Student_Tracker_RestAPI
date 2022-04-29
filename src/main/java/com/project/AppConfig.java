@@ -99,7 +99,7 @@ public class AppConfig implements WebMvcConfigurer{
     private Map<String, String> getDbProps () throws Exception {
         Map<String, String> propsMap = new HashMap<>();
         //dev
-        propsMap.put("server", "localhost");
+        propsMap.put("server", "mysql_container");
         propsMap.put("database", "tracker");
         propsMap.put("user", "root");
         propsMap.put("password", "");
