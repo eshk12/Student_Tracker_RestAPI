@@ -23,14 +23,12 @@ pipeline {
                 echo "building the application from ${env.GIT_BRANCH}"
                 sh "mvn verify"
                 sh "docker build -t app ."
+                sh "docker run -d --name app --network java_app app"
+                sh "sleep 120"
                 }
         }
 
         stage('test') {
-            when {
-                branch 'master'
-                beforeOptions true
-                }
             steps {
                 echo "Test"
                 }
