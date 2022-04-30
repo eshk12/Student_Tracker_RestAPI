@@ -23,7 +23,7 @@ pipeline {
                 echo "building the application from ${env.GIT_BRANCH}"
                 sh "mvn verify"
                 sh "docker build -t app ."
-                sh "docker run -d --name app --network java_app app"
+                sh "docker run -d --name app --network java_app -p 8801:8801 app"
                 sh "sleep 120"
                 }
         }
