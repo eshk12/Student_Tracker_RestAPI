@@ -23,6 +23,9 @@ pipeline {
                 echo "building the application from ${env.GIT_BRANCH}"
                 sh "mvn verify"
                 sh "docker build -t app ."
+                sh "docker-compose up -d"
+                sh "sleep 120"
+                sh "docker-compose down"
                 }
         }
 
