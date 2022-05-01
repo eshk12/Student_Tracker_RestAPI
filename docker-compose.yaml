@@ -6,7 +6,7 @@ services:
     ports:
       - '80:80'
     volumes:
-      - ./conf/:/etc/nginx/conf.d/
+      - ./conf:/etc/nginx/conf.d
     links:
       - rest_app
   rest_app:
