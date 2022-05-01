@@ -31,4 +31,3 @@ networks:
   default:
     external:
       name: java_app
-~                       
