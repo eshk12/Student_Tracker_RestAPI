@@ -40,7 +40,6 @@ pipeline {
     post {
     always {
         deleteDir()
-        sh "docker rm -f app"
         echo "Job done"
         }
     }
