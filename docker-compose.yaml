@@ -1,10 +1,12 @@
 version: '3.3'
 services:
   front_end:
-    image: frfr
+    image: front_end
     container_name: front_end
     ports:
       - '80:80'
+    volumes:
+      - ${PWD}/conf/nginx.conf:/etc/nginx/nginx.conf
     links:
       - rest_app
   rest_app:
