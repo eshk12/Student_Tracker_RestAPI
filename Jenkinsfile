@@ -20,7 +20,7 @@ pipeline {
         
         stage('build') {
             steps {
-                sh "docker-compose down"
+                sh "docker rm -f mysql_container"
                 echo "building the application from ${env.GIT_BRANCH}"
                 sh "mvn verify"
                 sh "docker build -t app ."
