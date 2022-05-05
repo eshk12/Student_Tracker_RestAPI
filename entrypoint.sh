@@ -6,8 +6,9 @@ while [ $state -eq 0 ]; do
   if [ $? -eq 0 ];then
     state=1;
   else
-    echo "Wait for mysql"
+    echo "Wait for mysql";
     sleep 3;
+    echo "try to connect";
   fi;
   done;
   
