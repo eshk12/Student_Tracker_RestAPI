@@ -20,6 +20,7 @@ pipeline {
         
         stage('build') {
             steps {
+                sh "docker-compose down"
                 echo "building the application from ${env.GIT_BRANCH}"
                 sh "mvn verify"
                 sh "docker build -t app ."
