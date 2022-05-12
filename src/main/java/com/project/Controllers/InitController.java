@@ -23,6 +23,11 @@ public class InitController {
     @Autowired private PasswordAuthentication passwordAuthentication;
     @Autowired private Definitions definitions;
 
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public String greetingIndex(){
+        return "<center><h1>Server is running :)</h1></center>";
+    }
+    
     @RequestMapping(value = "/init/firstrun", method = RequestMethod.POST)
     public BasicResponseModel firstRun()
     {
