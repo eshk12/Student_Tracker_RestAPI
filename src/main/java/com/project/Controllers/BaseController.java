@@ -20,6 +20,7 @@ public class BaseController {
         AuthUser authUser;
         String token = request.getHeader("PARAM_X_AUTH");
         Integer id = request.getHeader("PARAM_ID_AUTH") != null ? Integer.parseInt(request.getHeader("PARAM_ID_AUTH")) : 0 ;
+        System.out.println(token +" : "+ id);
         if(id > 0 && !token.equals("token_not_exists")){
             User user = (User) persist.getQuerySession().createQuery("FROM User WHERE token = :token AND id = :id")
                     .setParameter("id", id)
