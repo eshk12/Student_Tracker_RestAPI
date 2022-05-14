@@ -23,7 +23,7 @@ pipeline {
                 sh "docker rm -f mysql_container"
                 echo "building the application from ${env.GIT_BRANCH}"
                 sh "mvn verify"
-                sh "docker build -t app ."
+                sh "docker build -t rest_app ."
                 }
         }
 
