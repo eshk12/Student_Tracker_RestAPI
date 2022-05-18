@@ -21,7 +21,7 @@ pipeline {
     }
 
     stages {
-        
+        /*
         stage('Prep') {
             steps {
                 git branch: env.GIT_BRANCH, credentialsId: 'baruch.bazak.devops', url: 'git@github.com:eshk12/Student_Tracker_RestAPI.git'
@@ -46,7 +46,7 @@ pipeline {
                 }
             }
         }
-
+        */
         stage('checkout') {
             steps {
                 deleteDir()
