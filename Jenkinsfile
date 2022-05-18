@@ -61,7 +61,7 @@ pipeline {
                 script{
                     echo "building the application from ${env.GIT_BRANCH}"
                     if (env.GIT_BRANCH ==~ "main"){
-                        sh "mvn versions:set -DnewVersion="${env.VERSION}.${env.NewTag}"
+                        sh "mvn versions:set -DnewVersion="${env.VERSION}.${env.NEW_TAG}"
                     }
                     sh """mvn verify
                           docker build -t rest ."""
