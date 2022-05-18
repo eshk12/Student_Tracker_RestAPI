@@ -106,4 +106,3 @@ pipeline {
         echo "Job done!"
         }
     }
-}
