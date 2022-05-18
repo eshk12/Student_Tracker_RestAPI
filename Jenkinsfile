@@ -103,7 +103,7 @@ pipeline {
 
     post {
     always {
-        echo "Job done"
+        echo "Job done!"
         }
     }
 }
