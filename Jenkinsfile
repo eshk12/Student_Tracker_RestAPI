@@ -27,7 +27,7 @@ pipeline {
                 git branch: env.GIT_BRANCH, credentialsId: 'baruch.bazak.devops', url: 'git@github.com:eshk12/Student_Tracker_RestAPI.git'
                 script {
                     branchName = env.GIT_BRANCH.split('/')
-                    if (branchName[0] == 'feature' || branchName[0] == 'release' || branchName == 'main') {
+                    if (branchName[0] == 'feature' || branchName[0] == 'release') {
                         env.VERSION = branchName[1]
                         echo "${env.VERSION}"
                         sh "git tag"
@@ -80,8 +80,8 @@ pipeline {
         
         stage('Publish')
             steps {
-                sh """docker tag rest:latest 274129698771.dkr.ecr.eu-central-1.amazonaws.com/rest:${env.VERSION}.${env.NewTag}
-                      docker push 274129698771.dkr.ecr.eu-central-1.amazonaws.com/rest:${env.VERSION}.${env.NewTag}"""
+                sh """docker tag rest:latest 274129698771.dkr.ecr.eu-central-1.amazonaws.com/rest:${env.VERSION}.${env.NEW_TAG}
+                      docker push 274129698771.dkr.ecr.eu-central-1.amazonaws.com/rest:${env.VERSION}.${env.NEW_TAG}"""
             }
         
         }
